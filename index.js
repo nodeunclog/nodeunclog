@@ -86,13 +86,18 @@ Unclog.prototype.request = function(req, res, next) {
     else return Request;
 };
 
-function Socket(socket, next) {
-    return next();
-}
-Unclog.prototype.socket = function(socket, next) {
-    if (next && (typeof(next) == 'function'))
-        return Socket(socket, next);
-    else return Socket;
+
+
+var socketRouter = require('socket.io-events')();
+socketRouter.on(function(socket, arguments, next) {
+    Unclog.prototype.verbose('SOCKET.on("' + toShortString(arguments[0],10,10) + '"' + (arguments[1] ? (', ' + toShortString(JSON.stringify(arguments[1]),15,15)) : '') + ')');
+    next();
+});
+Unclog.prototype.socket = function() {
+    if (arguments.length)
+        return socketRouter(arguments[0], arguments[1]);
+    else
+        return socketRouter;
 };
 
 
