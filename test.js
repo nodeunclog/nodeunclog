@@ -36,6 +36,16 @@ console.silly('World. Hey, world! HEEEY WOOOOOOORLD!!!!! ... hi! :)');
 console.verbose('Lorem ipsum world dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
 console.verbose('Lorem ipsum world dolor sit amet,\nconsectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
 
+
+var counter = 10;
+
+function repeater() {
+    if (counter-- > 0)
+        repeater();
+    else console.debug('hello world');
+}
+repeater();
+
 // console.log('Hello world!');
 // console.log('Hello world!');
 // console.log('Hello world!');
