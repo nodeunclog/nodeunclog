@@ -26,15 +26,15 @@ console.log({
 // var a = {}; a.err();
 
 // console.log('Hello %s', 'world!', global);
-// console.info('Hey listen world, you might wanna know this...');
-// console.warn('Hey lookout world! Don\'t say I didn\'t warn you');
-// console.error('â”œâ”€â”, world.. € Iâ”œâ”€â”don\'tâ”œâ”€â”even\\');
+console.info('Hey listen world, you might wanna know this...');
+console.warn('Hey lookout world! Don\'t say I didn\'t warn you');
+console.error('â”œâ”€â”, world.. € Iâ”œâ”€â”don\'tâ”œâ”€â”even\\');
 // var console = require('./index')('teaaaaaaaaaaaaaa');
 
-// console.debug('Why aren\'t you working world, why?');
-// console.silly('World. Hey, world! HEEEY WOOOOOOORLD!!!!! ... hi! :)');
-// console.verbose('Lorem ipsum world dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
-// console.verbose('Lorem ipsum world dolor sit amet,\nconsectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
+console.debug('Why aren\'t you working world, why?');
+console.silly('World. Hey, world! HEEEY WOOOOOOORLD!!!!! ... hi! :)');
+console.verbose('Lorem ipsum world dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
+console.verbose('Lorem ipsum world dolor sit amet,\nconsectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
 
 // console.log('Hello world!');
 // console.log('Hello world!');

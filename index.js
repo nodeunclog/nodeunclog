@@ -34,9 +34,9 @@ function Unclog(customContext) {};
 for (var j = 0; j < consoleLevels.length; j++)
     Unclog.prototype[consoleLevels[j]] = Prelog(consoleLevels[j]);
 Unclog.prototype.error = Unclog.prototype.err;
+// Unclog.prototype.error = Unclog.prototype.err = console.error;
 
 function Prelog(consoleLevel) {
-    // console.log(consoleLevel);
     var level = consoleLevel;
     var number = consoleLevelNumber(level);
     var basicLevel = consoleLevelMapToBasicLevel(number);
@@ -49,8 +49,12 @@ function Prelog(consoleLevel) {
         var stringPadding = getStringPadding(string, config.contentWidth);
         var baseFilename = context.baseFilename;
         var stackTrail = context.stackTrail;
-        var extras = truncateExtras(baseFilename + ' ' + stackTrail, config.extraWidth, .77);
-        console[basicLevel].call(console, bullet[0], string, stringPadding, extras);
+        var extras = truncateExtras(levelText + ' ' + baseFilename + ' ' + stackTrail, config.extraWidth, .77);
+        try {
+            console[basicLevel].call(console, color[0] + bullet[0], string, stringPadding + color[0], extras);
+        } catch (err) {
+            console.error.apply(console, arguments);
+        }
         // console.log(getContext().baseFilename);
         // console.log.apply(console, arguments);
         // console.log(getContext().stackTrail);
@@ -98,7 +102,7 @@ function expandConsoleArguments(arguments, depth) {
 }
 
 function getStringPadding(string, contentWidth) {
-    var stringPadding = ''
+    var stringPadding = consoleLevelColor(1)[0] + '';
     var length = contentWidth - string.length;
     if (length > 0)
         for (var j = 0; j < length; j++)
@@ -127,7 +131,7 @@ function consoleLevelMapToBasicLevel(consoleLevelNumber) {
         'log',
         'log',
         'warn',
-        'err',
+        'error',
         'log',
         'log',
     ][consoleLevelNumber]);
@@ -137,16 +141,19 @@ function consoleLevelPaddedText(consoleLevelNumber) {
     return ([
         'silly  ',
         'verbose',
-        '  log  ',
-        ' info  ',
-        ' pass  ',
+        'log    ',
+        'info   ',
+        'pass   ',
         'start  ',
-        '    end',
-        '   warn',
-        '    err',
-        '   fail',
-        '  debug',
-    ][consoleLevelNumber]);
+        'end    ',
+        'warn   ',
+        'err    ',
+        'fail   ',
+        'debug  ',
+    ].replaceAll(/ /g, config.paddingDelimiter)
+    // .replaceAll(config.paddingDelimiter, ' ' + consoleLevelColor(1)[0])
+    .replaceAll(config.paddingDelimiter, ' ')
+    [consoleLevelNumber]);
 }
 
 function consoleLevelBullet(consoleLevelNumber) {
