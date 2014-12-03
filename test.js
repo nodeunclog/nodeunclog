@@ -7,7 +7,8 @@ var console = require('unclog');
 // // console.log('Hello')('world!');
 // console.log('I\'ve been waiting for a chance to see your face.');
 
-// console.log('Hello %s', 'world!');
+console.log('Hello %s', 'world!');
+console.debug('Hello %s', 'world!');
 console.log({
     level1: {
         level2: {
@@ -21,6 +22,9 @@ console.log({
         }
     }
 });
+
+// var a = {}; a.err();
+
 // console.log('Hello %s', 'world!', global);
 // console.info('Hey listen world, you might wanna know this...');
 // console.warn('Hey lookout world! Don\'t say I didn\'t warn you');

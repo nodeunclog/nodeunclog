@@ -1,4 +1,4 @@
-var processEnv = {};
+var config = {};
 
 // color
 function color() {
@@ -16,37 +16,44 @@ function color() {
         return false;
     return true;
 }
-processEnv.color = color();
+config.color = color();
 
 // width
+var maxContentWidth = 133;
+var separationFractionOfContentAndExtras = 2 / 3;
+
 function width() {
-    if (process.stdout.columns)
+    if (process.stdout.columns && process.stdout.columns <= (maxContentWidth / separationFractionOfContentAndExtras))
         return process.stdout.columns;
-    return 150;
+    else return (maxContentWidth / separationFractionOfContentAndExtras);
 }
-processEnv.width = width();
+config.width = width();
+config.contentWidth = config.width * separationFractionOfContentAndExtras;
+config.extraWidth = config.width * (1 - separationFractionOfContentAndExtras);
 
 // ignore
-processEnv.ignore = [
-    // 'fs.js',
-    // 'authenticator',
-    // 'express',
-    // 'domain.js',
-    // '_stream_readable.js',
-    // '<anonymous>',
-    // 'timers.js',
-    // '_stream_writable.js',
-    // 'http.js',
-    // 'module.js',
-    // 'node.js',
-    // 'net.js',
-    // 'events.js',
-    // 'node_modules',
-    // 'unclog',
+config.ignore = [
+    'fs.js',
+    'authenticator',
+    'express',
+    'domain.js',
+    '_stream_readable.js',
+    '<anonymous>',
+    'timers.js',
+    '_stream_writable.js',
+    'http.js',
+    'module.js',
+    'node.js',
+    'net.js',
+    'events.js',
+    'node_modules',
+    'unclog',
     'nodeunclog',
 ];
 
-// backtrace
-processEnv.backtrace = false;
+config.paddingDelimiter = '_';
 
-module.exports = processEnv;
+// backtrace
+config.backtrace = false;
+
+module.exports = config;

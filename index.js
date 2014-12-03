@@ -6,6 +6,8 @@ if (0 || process.env.skipunclog) {
 var util = require('util');
 var config = require('./config');
 
+var toShortString = require('to-short-string');
+
 var path = require('path');
 var onFinished = require('on-finished');
 
@@ -14,44 +16,141 @@ Error.stackTraceLimit = 20;
 
 require('deep-index-of');
 
+var consoleLevels = [
+    'silly',
+    'verbose',
+    'log',
+    'info',
+    'pass',
+    'start',
+    'end',
+    'warn',
+    'err',
+    'fail',
+    'debug',
+];
 
-var Unclog = {};
-Unclog.log = Prelog('log');
+function Unclog(customContext) {};
+for (var j = 0; j < consoleLevels.length; j++)
+    Unclog.prototype[consoleLevels[j]] = Prelog(consoleLevels[j]);
+Unclog.prototype.error = Unclog.prototype.err;
 
 function Prelog(consoleLevel) {
     // console.log(consoleLevel);
+    var level = consoleLevel;
+    var number = consoleLevelNumber(level);
+    var basicLevel = consoleLevelMapToBasicLevel(number);
+    var levelText = consoleLevelPaddedText(number);
+    var color = consoleLevelColor(number);
+    var bullet = consoleLevelBullet(number);
     return function() {
-        // var string = expandConsoleArguments(arguments, consoleLevelToNumber(consoleLevel));
-        // console.log(string);
+        var context = getContext();
+        var string = expandConsoleArguments(arguments, consoleLevelNumber(consoleLevel));
+        var stringPadding = getStringPadding(string, config.contentWidth);
+        var baseFilename = context.baseFilename;
+        var stackTrail = context.stackTrail;
+        var extras = truncateExtras(baseFilename + ' ' + stackTrail, config.extraWidth, .77);
+        console[basicLevel].call(console, bullet[0], string, stringPadding, extras);
         // console.log(getContext().baseFilename);
         // console.log.apply(console, arguments);
-        console.log(getContext().stackTrail);
+        // console.log(getContext().stackTrail);
     }
 }
+
+function Request(req, res, next) {
+    // var context = getBaseFilename();
+    // It's currently impossible to get actualy filename. so many callbacks, even Error.Infinity doesn't help
+    var method = req.method.toUpperCase();
+    var url = req.url;
+    var ip = (req.headers['x-forwarded-for'] || req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress));
+    var useragent = '(' + require('ua-parser').parse(req.headers['user-agent']).ua.toString() + ')';
+
+    function log() {
+        clearTimeout(logTimeout);
+        var status = '[' + (res._header ? (res.statusCode || '...') : 'timeout') + ']';
+        // Unclog(ip || method || UnclogRequest.context || method)[res.statusCode > 400 ? 'error' : 'verbose'](method, url, status, '|', ip, toShortString(useragent, 10, 10));
+        Unclog.prototype[res.statusCode > 400 ? 'error' : 'verbose'](method, status, url, '|', ip, toShortString(useragent, 10, 10));
+        // Unclog(method)[res.statusCode > 400 ? 'error' : 'verbose'](method, url, status, '|', ip, useragent);
+    }
+    var logTimeout = setTimeout(log, 30000);
+    onFinished(res, log);
+    return next();
+}
+Unclog.prototype.request = function(req, res, next) {
+    if (next && (typeof(next) == 'function'))
+        return Request(req, res, next);
+    else return Request;
+};
+
+function Socket(socket, next) {
+    return next();
+}
+Unclog.prototype.socket = function(socket, next) {
+    if (next && (typeof(next) == 'function'))
+        return Socket(socket, next);
+    else return Socket;
+};
+
 
 function expandConsoleArguments(arguments, depth) {
     return util.format.apply(null, arguments);
     // return modifiedUtil(depth).format.apply(null, arguments);
 }
 
-function consoleLevelToNumber(consoleLevel) {
-    return [
-        'silly',
-        'verbose',
+function getStringPadding(string, contentWidth) {
+    var stringPadding = ''
+    var length = contentWidth - string.length;
+    if (length > 0)
+        for (var j = 0; j < length; j++)
+            stringPadding = stringPadding + config.paddingDelimiter;
+    return stringPadding;
+}
+
+function truncateExtras(string, extraWidth, fraction) {
+    var length = extraWidth - string.length;
+    if (length < 0)
+        string = toShortString(string, extraWidth, fraction);
+    return string;
+}
+
+function consoleLevelNumber(consoleLevel) {
+    return (consoleLevels.indexOf(consoleLevel));
+}
+
+function consoleLevelMapToBasicLevel(consoleLevelNumber) {
+    return ([
         'log',
-        'info',
-        'pass',
-        'start',
-        'end',
+        'log',
+        'log',
+        'log',
+        'log',
+        'log',
+        'log',
         'warn',
         'err',
-        'fail',
-        'debug',
-    ].indexOf(consoleLevel);
+        'log',
+        'log',
+    ][consoleLevelNumber]);
+}
+
+function consoleLevelPaddedText(consoleLevelNumber) {
+    return ([
+        'silly  ',
+        'verbose',
+        '  log  ',
+        ' info  ',
+        ' pass  ',
+        'start  ',
+        '    end',
+        '   warn',
+        '    err',
+        '   fail',
+        '  debug',
+    ][consoleLevelNumber]);
 }
 
 function consoleLevelBullet(consoleLevelNumber) {
-    return [
+    return ([
         ['☺', '☺', '☺'], // silly
         [' ', ' ', ' '], // verbose
         [' ', ' ', ' '], // log
@@ -63,11 +162,11 @@ function consoleLevelBullet(consoleLevelNumber) {
         ['█', ' ', ' '], // err
         ['×', '×', '×'], // fail
         ['●', ' ', ' '], // debug
-    ](consoleLevelNumber);
+    ][consoleLevelNumber]);
 }
 
 function consoleLevelColor(consoleLevelNumber) {
-    return [
+    return ([
         ['\x1b[36;2m', '\x1b[47;1;36;2m'], // silly
         ['\x1b[30;1m', '\x1b[47;1;30;1m'], // verbose
         ['\x1b[30;2m', '\x1b[47;1;30;2m'], // log
@@ -79,7 +178,7 @@ function consoleLevelColor(consoleLevelNumber) {
         ['\x1b[31;2m', '\x1b[47;1;31;2m'], // err
         ['\x1b[35;2m', '\x1b[47;1;35;2m'], // fail
         ['\x1b[34;1m', '\x1b[47;1;34;1m'], // debug
-    ](consoleLevelNumber);
+    ][consoleLevelNumber]);
 }
 
 function getContext() {
@@ -111,7 +210,7 @@ function getStackTrail(stacktrace, cutoff) {
     for (var j = 0; j < ((cutoff && cutoff < stacktrace.length) ? cutoff : stacktrace.length); j++)
         if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].lineNumber)
             if (stacktrace[j].fileName.deepIndexOf(config.ignore) == -1)
-                stackTrail += getBaseFolderAndFilename(stacktrace[j].fileName);
+                stackTrail += getBaseFolderAndFilename(stacktrace[j].fileName, stacktrace[j].lineNumber);
     return stackTrail;
 }
 
@@ -147,8 +246,4 @@ function modifiedUtil(options) {
     })(util);
 }
 
-
-module.exports = Unclog;
-
-
-
+module.exports = new Unclog;
