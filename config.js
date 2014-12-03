@@ -26,7 +26,7 @@ function width() {
     var width = (maxContentWidth / separationFractionOfContentAndExtras);
     if (process.stdout.columns && process.stdout.columns <= (maxContentWidth / separationFractionOfContentAndExtras))
         width = process.stdout.columns;
-    return width - 4;
+    return width - 5;
 }
 config.width = width();
 config.contentWidth = config.width * separationFractionOfContentAndExtras;
