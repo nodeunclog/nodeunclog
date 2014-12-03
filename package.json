@@ -1,0 +1,30 @@
+{
+    "name": "unclog",
+    "version": "2.0.0",
+    "author": "nodeunclog <nodeunclog@gmail.com>",
+    "repository": {
+        "url": "https://github.com/nodeunclog/nodeunclog"
+    },
+    "dependencies": {
+        "long-stack-traces": "",
+        "on-finished": "",
+        "socket.io-events": "",
+        "stack-trace": "",
+        "to-short-string": "",
+        "ua-parser": "",
+        "utils-merge": ""
+    },
+    "description": "unclog your console log",
+    "bugs": {
+        "url": "https://github.com/nodeunclog/nodeunclog/issues"
+    },
+    "homepage": "https://github.com/nodeunclog/nodeunclog",
+    "main": "index.js",
+    "scripts": {
+        "test": "mocha test.js"
+    },
+    "keywords": [
+        "console"
+    ],
+    "license": "ISC"
+}
