@@ -10,6 +10,7 @@
     "on-finished": "",
     "socket.io-events": "",
     "stack-trace": "",
+    "deep-index-of": "",
     "to-short-string": "",
     "ua-parser": "",
     "utils-merge": ""
