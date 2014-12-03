@@ -23,9 +23,10 @@ var maxContentWidth = 133;
 var separationFractionOfContentAndExtras = 2 / 3;
 
 function width() {
+    var width = (maxContentWidth / separationFractionOfContentAndExtras);
     if (process.stdout.columns && process.stdout.columns <= (maxContentWidth / separationFractionOfContentAndExtras))
-        return process.stdout.columns;
-    else return (maxContentWidth / separationFractionOfContentAndExtras);
+        width = process.stdout.columns;
+    return width - 4;
 }
 config.width = width();
 config.contentWidth = config.width * separationFractionOfContentAndExtras;
