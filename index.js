@@ -192,7 +192,7 @@ function consoleLevelColor(consoleLevelNumber) {
 function getContext() {
     for (var stacktrace = stackTrace.parse(new Error()), j = 0; j < stacktrace.length; j++) {
         // console.log('stacktrace[' + j + '].fileName:', stacktrace[j].fileName);
-        if (stacktrace[j].fileName.deepIndexOf(config.ignore) == -1)
+        if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].fileName.deepIndexOf(config.ignore) == -1)
             return attachBaseFilenameToStacktrace(stacktrace, j);
     }
     return attachBaseFilenameToStacktrace(stacktrace, 2);
