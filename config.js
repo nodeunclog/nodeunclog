@@ -53,7 +53,6 @@ config.ignore = [
     'events.js',
     'node_modules',
     'unclog',
-    'nodeunclog',
 ];
 
 config.paddingDelimiter = '…';
