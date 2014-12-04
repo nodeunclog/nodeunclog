@@ -49,7 +49,7 @@ function Prelog(consoleLevel) {
         var stringPadding = getStringPadding(string, config.contentWidth);
         var baseFilename = context.baseFilename;
         var stackTrail = context.stackTrail;
-        var extras = truncateExtras(levelText + ' ' + baseFilename + ' ' + stackTrail, config.extraWidth, 1);
+        var extras = truncateExtras(baseFilename + ' ' + stackTrail, config.extraWidth, 1);
         try {
             console[basicLevel].call(console, color[0] + bullet[0], string, stringPadding + color[0], extras);
         } catch (err) {
