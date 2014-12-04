@@ -10,8 +10,8 @@
     "on-finished": "",
     "socket.io-events": "",
     "stack-trace": "",
-    "deep-index-of": "",
-    "to-short-string": "",
+    "deep-index-of": "<0.2",
+    "to-short-string": "<0.2",
     "ua-parser": "",
     "utils-merge": ""
   },
