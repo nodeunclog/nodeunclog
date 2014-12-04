@@ -41,21 +41,57 @@ function Prelog(consoleLevel) {
     var number = consoleLevelNumber(level);
     var basicLevel = consoleLevelMapToBasicLevel(number);
     var levelText = consoleLevelPaddedText(number);
-    var color = consoleLevelColor(number);
+    var color = consoleLevelColor(number)[0];
+    var baseColor = consoleLevelColor(1)[0];
     var bullet = consoleLevelBullet(number);
     return function() {
         var context = getContext();
         var string = expandConsoleArguments(arguments, consoleLevelNumber(consoleLevel));
+        var availableWidthForExtras = getAvailableWidthForExtras(string, config.width);
         var stringPadding = getStringPadding(string, config.contentWidth);
         var baseFilename = context.baseFilename;
         var stackTrail = context.stackTrail;
-        var extras = truncateExtras(baseFilename + ' ' + stackTrail, config.extraWidth, 1);
+        // var extras = levelText + ' ' + baseFilename + ' ' + stackTrail;
+        var extras = stackTrail;
+        extras = truncateExtras(extras, availableWidthForExtras, 1);
+        var extrasPadding = getExtrasPadding(extras, availableWidthForExtras);
+        extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
         try {
-            console[basicLevel].call(console, color[0] + bullet[0], string, stringPadding + color[0], extras);
+            // console[basicLevel].call(console, color + bullet[0], string, stringPadding + color, extras);
+            console[basicLevel].call(console, color + bullet[0], string, extras);
         } catch (err) {
             console.error.apply(console, arguments);
         }
     }
+}
+
+function getExtrasPadding(extras, availableWidthForExtras) {
+    availableWidthForExtras = parseInt(availableWidthForExtras);
+    var extrasPadding = '';
+    var extraSpace = parseInt(availableWidthForExtras - extras.length);
+    if (extraSpace <= 0)
+        return extrasPadding;
+    if (extraSpace >= availableWidthForExtras)
+        return extrasPadding;
+    extrasPadding = (new Array(extraSpace)).join(' ');
+    // extrasPadding = (new Array(extraSpace)).join(config.paddingDelimiter);
+    return extrasPadding;
+}
+
+function truncateExtras(string, availableWidthForExtras, fraction) {
+    var length = availableWidthForExtras - string.length;
+    if (length < 0)
+        string = toShortString(string, availableWidthForExtras, fraction);
+    return string;
+}
+
+function getAvailableWidthForExtras(content, totalWidth) {
+    var availableWidthForExtras = totalWidth - content.length;
+    if (content.indexOf('\n') > -1)
+        availableWidthForExtras = totalWidth - content.split('\n').pop().length
+    if (content.indexOf('\r') > -1)
+        availableWidthForExtras = totalWidth - content.split('\r').pop().length
+    return availableWidthForExtras;
 }
 
 function Request(req, res, next) {
@@ -112,13 +148,6 @@ function getStringPadding(string, contentWidth) {
     return stringPadding;
 }
 
-function truncateExtras(string, extraWidth, fraction) {
-    var length = extraWidth - string.length;
-    if (length < 0)
-        string = toShortString(string, extraWidth, fraction);
-    return string;
-}
-
 
 function getContext() {
     for (var stacktrace = stackTrace.parse(new Error()), j = 0; j < stacktrace.length; j++) {
@@ -137,7 +166,7 @@ function attachBaseFilenameToStacktrace(stacktrace, j) {
 }
 
 function getBaseFilename(file) {
-    if(file && file.deepIndexOf(config.ignore) == -1)
+    if (file && file.deepIndexOf(config.ignore) == -1)
         return path.basename(file, path.extname(path.basename(file)));
     else
         return '\b';

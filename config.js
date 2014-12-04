@@ -19,7 +19,9 @@ function color() {
 config.color = color();
 
 // width
-var maxContentWidth = 133;
+var maxContentWidth = 150;
+if (!isNaN(parseInt(process.env.unclogMaxContentWidth)))
+    maxContentWidth = parseInt(process.env.unclogMaxContentWidth);
 var separationFractionOfContentAndExtras = 2 / 3;
 
 function width() {
@@ -29,6 +31,8 @@ function width() {
     return width - 5;
 }
 config.width = width();
+if (!isNaN(parseInt(process.env.unclogWidth)))
+    config.width = parseInt(process.env.unclogWidth);
 config.contentWidth = config.width * separationFractionOfContentAndExtras;
 config.extraWidth = config.width * (1 - separationFractionOfContentAndExtras);
 
@@ -52,7 +56,7 @@ config.ignore = [
     'nodeunclog',
 ];
 
-config.paddingDelimiter = '_';
+config.paddingDelimiter = '…';
 
 // backtrace
 config.backtrace = false;

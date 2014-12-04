@@ -16,7 +16,6 @@ function repeater() {
     else console.debug('hello world');
 }
 repeater();
-return;
 
 console.log('Hello %s', 'world!');
 console.debug('Hello %s', 'world!');
@@ -46,6 +45,7 @@ console.debug('Why aren\'t you working world, why?');
 console.silly('World. Hey, world! HEEEY WOOOOOOORLD!!!!! ... hi! :)');
 console.verbose('Lorem ipsum world dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
 console.verbose('Lorem ipsum world dolor sit amet,\nconsectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
+console.silly('Lorem ipsum world dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum world dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
 
 
 
