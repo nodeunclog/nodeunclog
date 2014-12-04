@@ -119,6 +119,45 @@ function truncateExtras(string, extraWidth, fraction) {
     return string;
 }
 
+
+function getContext() {
+    for (var stacktrace = stackTrace.parse(new Error()), j = 0; j < stacktrace.length; j++) {
+        // console.log('stacktrace[' + j + '].fileName:', stacktrace[j].fileName);
+        if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].fileName.deepIndexOf(config.ignore) == -1)
+            return attachBaseFilenameToStacktrace(stacktrace, j);
+    }
+    return attachBaseFilenameToStacktrace(stacktrace, 2);
+}
+
+function attachBaseFilenameToStacktrace(stacktrace, j) {
+    stacktrace[j].baseFilename = (!j ? '*' : '') + getBaseFilename(stacktrace[j].fileName);
+    stacktrace[j].baseFolderAndFilename = getBaseFolderAndFilename(stacktrace[j].fileName, stacktrace[j].lineNumber);
+    stacktrace[j].stackTrail = getStackTrail(stacktrace);
+    return stacktrace[j];
+}
+
+function getBaseFilename(file) {
+    if(file && file.deepIndexOf(config.ignore) == -1)
+        return path.basename(file, path.extname(path.basename(file)));
+    else
+        return '\b';
+}
+
+function getBaseFolderAndFilename(file, additionalInfo) {
+    // additionalInfo = stacktrace[j].lineNumber
+    return '[' + path.dirname(file).split(path.sep).reverse()[0] + path.sep + getBaseFilename(file) + (additionalInfo ? (':' + (config.backtrace ? '~' : '') + additionalInfo) : '') + ']';
+}
+
+function getStackTrail(stacktrace, cutoff) {
+    var stackTrail = '';
+    for (var j = 0; j < ((cutoff && cutoff < stacktrace.length) ? cutoff : stacktrace.length); j++)
+        if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].lineNumber)
+            if (stacktrace[j].fileName.deepIndexOf(config.ignore) == -1)
+                stackTrail += getBaseFolderAndFilename(stacktrace[j].fileName, stacktrace[j].lineNumber);
+    return stackTrail;
+}
+
+
 function consoleLevelNumber(consoleLevel) {
     return (consoleLevels.indexOf(consoleLevel));
 }
@@ -188,42 +227,6 @@ function consoleLevelColor(consoleLevelNumber) {
         ['\x1b[34;1m', '\x1b[47;1;34;1m'], // debug
     ][consoleLevelNumber]);
 }
-
-function getContext() {
-    for (var stacktrace = stackTrace.parse(new Error()), j = 0; j < stacktrace.length; j++) {
-        // console.log('stacktrace[' + j + '].fileName:', stacktrace[j].fileName);
-        if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].fileName.deepIndexOf(config.ignore) == -1)
-            return attachBaseFilenameToStacktrace(stacktrace, j);
-    }
-    return attachBaseFilenameToStacktrace(stacktrace, 2);
-}
-
-function attachBaseFilenameToStacktrace(stacktrace, j) {
-    stacktrace[j].baseFilename = (!j ? '*' : '') + getBaseFilename(stacktrace[j].fileName);
-    stacktrace[j].baseFolderAndFilename = getBaseFolderAndFilename(stacktrace[j].fileName, stacktrace[j].lineNumber);
-    stacktrace[j].stackTrail = getStackTrail(stacktrace);
-    return stacktrace[j];
-}
-
-function getBaseFilename(file) {
-    return path.basename(file, path.extname(path.basename(file)));
-}
-
-function getBaseFolderAndFilename(file, additionalInfo) {
-    // additionalInfo = stacktrace[j].lineNumber
-    return '[' + path.dirname(file).split(path.sep).reverse()[0] + path.sep + getBaseFilename(file) + (additionalInfo ? (':' + (config.backtrace ? '~' : '') + additionalInfo) : '') + ']';
-}
-
-function getStackTrail(stacktrace, cutoff) {
-    var stackTrail = '';
-    for (var j = 0; j < ((cutoff && cutoff < stacktrace.length) ? cutoff : stacktrace.length); j++)
-        if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].lineNumber)
-            if (stacktrace[j].fileName.deepIndexOf(config.ignore) == -1)
-                stackTrail += getBaseFolderAndFilename(stacktrace[j].fileName, stacktrace[j].lineNumber);
-    return stackTrail;
-}
-
-
 
 
 
