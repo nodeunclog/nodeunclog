@@ -7,6 +7,17 @@ var console = require('unclog');
 // // console.log('Hello')('world!');
 // console.log('I\'ve been waiting for a chance to see your face.');
 
+
+var counter = 10;
+
+function repeater() {
+    if (counter-- > 0)
+        repeater();
+    else console.debug('hello world');
+}
+repeater();
+return;
+
 console.log('Hello %s', 'world!');
 console.debug('Hello %s', 'world!');
 console.log({
@@ -37,14 +48,6 @@ console.verbose('Lorem ipsum world dolor sit amet, consectetur adipisicing elit,
 console.verbose('Lorem ipsum world dolor sit amet,\nconsectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
 
 
-var counter = 10;
-
-function repeater() {
-    if (counter-- > 0)
-        repeater();
-    else console.debug('hello world');
-}
-repeater();
 
 // console.log('Hello world!');
 // console.log('Hello world!');

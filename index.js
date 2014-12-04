@@ -55,9 +55,6 @@ function Prelog(consoleLevel) {
         } catch (err) {
             console.error.apply(console, arguments);
         }
-        // console.log(getContext().baseFilename);
-        // console.log.apply(console, arguments);
-        // console.log(getContext().stackTrail);
     }
 }
 
@@ -90,7 +87,7 @@ Unclog.prototype.request = function(req, res, next) {
 
 var socketRouter = require('socket.io-events')();
 socketRouter.on(function(socket, arguments, next) {
-    Unclog.prototype.verbose('SOCKET.on("' + toShortString(arguments[0],10,10) + '"' + (arguments[1] ? (', ' + toShortString(JSON.stringify(arguments[1]),15,15)) : '') + ')');
+    Unclog.prototype.verbose('SOCKET.on("' + toShortString(arguments[0], 10, 10) + '"' + (arguments[1] ? (', ' + toShortString(JSON.stringify(arguments[1]), 15, 15)) : '') + ')');
     next();
 });
 Unclog.prototype.socket = function() {
@@ -144,21 +141,20 @@ function consoleLevelMapToBasicLevel(consoleLevelNumber) {
 
 function consoleLevelPaddedText(consoleLevelNumber) {
     return ([
-        'silly  ',
-        'verbose',
-        'log    ',
-        'info   ',
-        'pass   ',
-        'start  ',
-        'end    ',
-        'warn   ',
-        'err    ',
-        'fail   ',
-        'debug  ',
-    ].replaceAll(/ /g, config.paddingDelimiter)
-    // .replaceAll(config.paddingDelimiter, ' ' + consoleLevelColor(1)[0])
-    .replaceAll(config.paddingDelimiter, ' ')
-    [consoleLevelNumber]);
+            'silly  ',
+            'verbose',
+            'log    ',
+            'info   ',
+            'pass   ',
+            'start  ',
+            'end    ',
+            'warn   ',
+            'err    ',
+            'fail   ',
+            'debug  ',
+        ].replaceAll(/ /g, config.paddingDelimiter)
+        // .replaceAll(config.paddingDelimiter, ' ' + consoleLevelColor(1)[0])
+        .replaceAll(config.paddingDelimiter, ' ')[consoleLevelNumber]);
 }
 
 function consoleLevelBullet(consoleLevelNumber) {
@@ -194,11 +190,12 @@ function consoleLevelColor(consoleLevelNumber) {
 }
 
 function getContext() {
-    for (var stacktrace = stackTrace.parse(new Error()), j = 0; j < stacktrace.length; j++)
-        if (stacktrace[j].fileName.deepIndexOf(config.ignore) == -1) {
+    for (var stacktrace = stackTrace.parse(new Error()), j = 0; j < stacktrace.length; j++) {
+        // console.log('stacktrace[' + j + '].fileName:', stacktrace[j].fileName);
+        if (stacktrace[j].fileName.deepIndexOf(config.ignore) == -1)
             return attachBaseFilenameToStacktrace(stacktrace, j);
-        }
-    return attachBaseFilenameToStacktrace(stacktrace, 0);
+    }
+    return attachBaseFilenameToStacktrace(stacktrace, 2);
 }
 
 function attachBaseFilenameToStacktrace(stacktrace, j) {
