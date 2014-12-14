@@ -12,7 +12,8 @@ var path = require('path');
 var onFinished = require('on-finished');
 
 var stackTrace = require('stack-trace');
-Error.stackTraceLimit = 20;
+// Error.stackTraceLimit = 20;
+Error.stackTraceLimit = Infinity;
 
 require('deep-index-of');
 
@@ -43,9 +44,10 @@ function Prelog(consoleLevel) {
     var levelText = consoleLevelPaddedText(number);
     var color = consoleLevelColor(number)[0];
     var baseColor = consoleLevelColor(1)[0];
+    var resetColor = consoleLevelColor('reset');
     var bullet = consoleLevelBullet(number);
     return function() {
-        var context = getContext();
+        var context = getContext.apply(null, arguments);
         var string = expandConsoleArguments(arguments, consoleLevelNumber(consoleLevel));
         var availableWidthForExtras = getAvailableWidthForExtras(string, config.width);
         var stringPadding = getStringPadding(string, config.contentWidth);
@@ -58,7 +60,7 @@ function Prelog(consoleLevel) {
         extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
         try {
             // console[basicLevel].call(console, color + bullet[0], string, stringPadding + color, extras);
-            console[basicLevel].call(console, color + bullet[0], string, extras);
+            console[basicLevel].call(console, color + bullet[0], string, extras, resetColor);
         } catch (err) {
             console.error.apply(console, arguments);
         }
@@ -149,13 +151,21 @@ function getStringPadding(string, contentWidth) {
 }
 
 
-function getContext() {
-    for (var stacktrace = stackTrace.parse(new Error()), j = 0; j < stacktrace.length; j++) {
-        // console.log('stacktrace[' + j + '].fileName:', stacktrace[j].fileName);
-        if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].fileName.deepIndexOf(config.ignore) == -1)
-            return attachBaseFilenameToStacktrace(stacktrace, j);
+function getContext(err) {
+    try {
+        if (err && (err instanceof Error))
+            throw err;
+        else
+            throw new Error(err.toString());
+    } catch (err) {
+        // console.error(err.stack);
+        for (var stacktrace = stackTrace.parse(err), j = 0; j < stacktrace.length; j++) {
+            // console.log('stacktrace[' + j + '].fileName:', stacktrace[j].fileName);
+            if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].fileName.deepIndexOf(config.ignore) == -1)
+                return attachBaseFilenameToStacktrace(stacktrace, j);
+        }
+        return attachBaseFilenameToStacktrace(stacktrace, 2);
     }
-    return attachBaseFilenameToStacktrace(stacktrace, 2);
 }
 
 function attachBaseFilenameToStacktrace(stacktrace, j) {
@@ -242,7 +252,7 @@ function consoleLevelBullet(consoleLevelNumber) {
 }
 
 function consoleLevelColor(consoleLevelNumber) {
-    return ([
+    var colors = [
         ['\x1b[36;2m', '\x1b[47;1;36;2m'], // silly
         ['\x1b[30;1m', '\x1b[47;1;30;1m'], // verbose
         ['\x1b[30;2m', '\x1b[47;1;30;2m'], // log
@@ -254,9 +264,12 @@ function consoleLevelColor(consoleLevelNumber) {
         ['\x1b[31;2m', '\x1b[47;1;31;2m'], // err
         ['\x1b[35;2m', '\x1b[47;1;35;2m'], // fail
         ['\x1b[34;1m', '\x1b[47;1;34;1m'], // debug
-    ][consoleLevelNumber]);
+    ];
+    // colors.reset = '\x1b[30;2m';
+    // colors.reset = '\x1b[0m';
+    colors.reset = '\x1b[39;1m';
+    return colors[consoleLevelNumber];
 }
-
 
 
 

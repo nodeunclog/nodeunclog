@@ -19,7 +19,7 @@ function color() {
 config.color = color();
 
 // width
-var maxContentWidth = 150;
+var maxContentWidth = 200;
 if (!isNaN(parseInt(process.env.unclogMaxContentWidth)))
     maxContentWidth = parseInt(process.env.unclogMaxContentWidth);
 var separationFractionOfContentAndExtras = 2 / 3;
