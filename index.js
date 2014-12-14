@@ -155,8 +155,10 @@ function getContext(err) {
     try {
         if (err && (err instanceof Error))
             throw err;
-        else
+        else if(err)
             throw new Error(err.toString());
+        else
+            throw new Error();
     } catch (err) {
         // console.error(err.stack);
         for (var stacktrace = stackTrace.parse(err), j = 0; j < stacktrace.length; j++) {
