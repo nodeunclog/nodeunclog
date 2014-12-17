@@ -68,6 +68,7 @@ function Prelog(consoleLevel) {
 }
 
 function getExtrasPadding(extras, availableWidthForExtras) {
+    if (!extras || !extras.length) return '';
     availableWidthForExtras = parseInt(availableWidthForExtras);
     var extrasPadding = '';
     var extraSpace = parseInt(availableWidthForExtras - extras.length);
@@ -99,10 +100,22 @@ function getAvailableWidthForExtras(content, totalWidth) {
 function Request(req, res, next) {
     // var context = getBaseFilename();
     // It's currently impossible to get actualy filename. so many callbacks, even Error.Infinity doesn't help
+
+    // try {
+    //     throw new Error();
+    // } catch (err) {
+    //     console.error(err);
+    //     console.error(err.stack);
+    //     console.log('>', getContext(err).stackTrail, '<');
+    // }
+
     var method = req.method.toUpperCase();
     var url = req.url;
     var ip = (req.headers['x-forwarded-for'] || req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress));
     var useragent = '(' + require('ua-parser').parse(req.headers['user-agent']).ua.toString() + ')';
+    var logTimeout = setTimeout(log, 30000);
+    onFinished(res, log);
+    return next();
 
     function log() {
         clearTimeout(logTimeout);
@@ -111,9 +124,6 @@ function Request(req, res, next) {
         Unclog.prototype[res.statusCode > 400 ? 'error' : 'verbose'](method, status, url, '|', ip, toShortString(useragent, 10, 10));
         // Unclog(method)[res.statusCode > 400 ? 'error' : 'verbose'](method, url, status, '|', ip, useragent);
     }
-    var logTimeout = setTimeout(log, 30000);
-    onFinished(res, log);
-    return next();
 }
 Unclog.prototype.request = function(req, res, next) {
     if (next && (typeof(next) == 'function'))
@@ -155,7 +165,7 @@ function getContext(err) {
     try {
         if (err && (err instanceof Error))
             throw err;
-        else if(err)
+        else if (err)
             throw new Error(err.toString());
         else
             throw new Error();
