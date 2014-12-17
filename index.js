@@ -2,6 +2,11 @@ if (0 || process.env.skipunclog) {
     module.exports = require('./skip');
     return;
 }
+if (1 || process.env.blankunclog) {
+    console.log('Silence is golden.');
+    module.exports = require('./blank');
+    return;
+}
 
 var util = require('util');
 var config = require('./config');
