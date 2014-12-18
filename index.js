@@ -41,6 +41,8 @@ for (var j = 0; j < consoleLevels.length; j++)
     Unclog.prototype[consoleLevels[j]] = Prelog(consoleLevels[j]);
 Unclog.prototype.error = Unclog.prototype.err;
 // Unclog.prototype.error = Unclog.prototype.err = console.error;
+// Unclog.prototype.error = console.error;
+// Unclog.prototype.error = console.error = Unclog.prototype.err;
 
 function Prelog(consoleLevel) {
     var level = consoleLevel;
@@ -103,31 +105,35 @@ function getAvailableWidthForExtras(content, totalWidth) {
 }
 
 function Request(req, res, next) {
-    // var context = getBaseFilename();
-    // It's currently impossible to get actualy filename. so many callbacks, even Error.Infinity doesn't help
+    try {
+        // var context = getBaseFilename();
+        // It's currently impossible to get actualy filename. so many callbacks, even Error.Infinity doesn't help
 
-    // try {
-    //     throw new Error();
-    // } catch (err) {
-    //     console.error(err);
-    //     console.error(err.stack);
-    //     console.log('>', getContext(err).stackTrail, '<');
-    // }
+        // try {
+        //     throw new Error();
+        // } catch (err) {
+        //     console.error(err);
+        //     console.error(err.stack);
+        //     console.log('>', getContext(err).stackTrail, '<');
+        // }
 
-    var method = req.method.toUpperCase();
-    var url = req.url;
-    var ip = (req.headers['x-forwarded-for'] || req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress));
-    var useragent = '(' + require('ua-parser').parse(req.headers['user-agent']).ua.toString() + ')';
-    var logTimeout = setTimeout(log, 30000);
-    onFinished(res, log);
-    return next();
+        var method = req.method.toUpperCase();
+        var url = req.url;
+        var ip = (req.headers['x-forwarded-for'] || req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress));
+        var useragent = '(' + require('ua-parser').parse(req.headers['user-agent']).ua.toString() + ')';
+        var logTimeout = setTimeout(log, 30000);
+        onFinished(res, log);
+        return next();
 
-    function log() {
-        clearTimeout(logTimeout);
-        var status = '[' + (res._header ? (res.statusCode || '...') : 'timeout') + ']';
-        // Unclog(ip || method || UnclogRequest.context || method)[res.statusCode > 400 ? 'error' : 'verbose'](method, url, status, '|', ip, toShortString(useragent, 10, 10));
-        Unclog.prototype[res.statusCode > 400 ? 'error' : 'verbose'](method, status, url, '|', ip, toShortString(useragent, 10, 10));
-        // Unclog(method)[res.statusCode > 400 ? 'error' : 'verbose'](method, url, status, '|', ip, useragent);
+        function log() {
+            clearTimeout(logTimeout);
+            var status = '[' + (res._header ? (res.statusCode || '...') : 'timeout') + ']';
+            // Unclog(ip || method || UnclogRequest.context || method)[res.statusCode > 400 ? 'error' : 'verbose'](method, url, status, '|', ip, toShortString(useragent, 10, 10));
+            Unclog.prototype[res.statusCode > 400 ? 'error' : 'verbose'](method, status, url, '|', ip, toShortString(useragent, 10, 10));
+            // Unclog(method)[res.statusCode > 400 ? 'error' : 'verbose'](method, url, status, '|', ip, useragent);
+        }
+    } catch (err) {
+        Unclog.prototype.err(err)
     }
 }
 Unclog.prototype.request = function(req, res, next) {
@@ -140,8 +146,12 @@ Unclog.prototype.request = function(req, res, next) {
 
 var socketRouter = require('socket.io-events')();
 socketRouter.on(function(socket, arguments, next) {
-    Unclog.prototype.verbose('SOCKET.on("' + toShortString(arguments[0], 10, 10) + '"' + (arguments[1] ? (', ' + toShortString(JSON.stringify(arguments[1]), 15, 15)) : '') + ')');
-    next();
+    try {
+        Unclog.prototype.verbose('SOCKET.on("' + toShortString(arguments[0], 10, 10) + '"' + (arguments[1] ? (', ' + toShortString(JSON.stringify(arguments[1]), 15, 15)) : '') + ')');
+        next();
+    } catch (err) {
+        Unclog.prototype.err(err)
+    }
 });
 Unclog.prototype.socket = function() {
     if (arguments.length)
