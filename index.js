@@ -43,6 +43,7 @@ Unclog.prototype.error = Unclog.prototype.err;
 // Unclog.prototype.error = Unclog.prototype.err = console.error;
 // Unclog.prototype.error = console.error;
 // Unclog.prototype.error = console.error = Unclog.prototype.err;
+console.err = console.error;
 
 function Prelog(consoleLevel) {
     var level = consoleLevel;
@@ -54,22 +55,26 @@ function Prelog(consoleLevel) {
     var resetColor = consoleLevelColor('reset');
     var bullet = consoleLevelBullet(number);
     return function() {
-        var context = getContext.apply(null, arguments);
-        var string = expandConsoleArguments(arguments, consoleLevelNumber(consoleLevel));
-        var availableWidthForExtras = getAvailableWidthForExtras(string, config.width);
-        var stringPadding = getStringPadding(string, config.contentWidth);
-        var baseFilename = context.baseFilename;
-        var stackTrail = context.stackTrail;
-        // var extras = levelText + ' ' + baseFilename + ' ' + stackTrail;
-        var extras = stackTrail;
-        extras = truncateExtras(extras, availableWidthForExtras, 1);
-        var extrasPadding = getExtrasPadding(extras, availableWidthForExtras);
-        extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
         try {
-            // console[basicLevel].call(console, color + bullet[0], string, stringPadding + color, extras);
-            console[basicLevel].call(console, color + bullet[0], string, extras, resetColor);
+            var context = getContext.apply(null, arguments);
+            var string = expandConsoleArguments(arguments, consoleLevelNumber(consoleLevel));
+            var availableWidthForExtras = getAvailableWidthForExtras(string, config.width);
+            var stringPadding = getStringPadding(string, config.contentWidth);
+            var baseFilename = context.baseFilename;
+            var stackTrail = context.stackTrail;
+            // var extras = levelText + ' ' + baseFilename + ' ' + stackTrail;
+            var extras = stackTrail;
+            extras = truncateExtras(extras, availableWidthForExtras, 1);
+            var extrasPadding = getExtrasPadding(extras, availableWidthForExtras);
+            extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
+            try {
+                // console[basicLevel].call(console, color + bullet[0], string, stringPadding + color, extras);
+                console[basicLevel].call(console, color + bullet[0], string, extras, resetColor);
+            } catch (err) {
+                console.error.apply(console, arguments);
+            }
         } catch (err) {
-            console.error.apply(console, arguments);
+            console.error(err.stack);
         }
     }
 }
@@ -150,7 +155,7 @@ socketRouter.on(function(socket, arguments, next) {
         Unclog.prototype.verbose('SOCKET.on("' + toShortString(arguments[0], 10, 10) + '"' + (arguments[1] ? (', ' + toShortString(JSON.stringify(arguments[1]), 15, 15)) : '') + ')');
         next();
     } catch (err) {
-        Unclog.prototype.err(err)
+        Unclog.prototype.err(err || new Error('socket error'));
     }
 });
 Unclog.prototype.socket = function() {
@@ -178,15 +183,36 @@ function getStringPadding(string, contentWidth) {
 
 function getContext(err) {
     try {
-        if (err && (err instanceof Error))
-            throw err;
-        else if (err)
+        if (err && (err instanceof Error)) {
+            if (!err.stack || !err.stack.length)
+                throw new Error(err.message);
+            else throw err;
+        } else if (err)
             throw new Error(err.toString());
         else
-            throw new Error();
+            throw new Error('');
     } catch (err) {
-        // console.error(err.stack);
-        for (var stacktrace = stackTrace.parse(err), j = 0; j < stacktrace.length; j++) {
+        if (!err) console.err('NO ERR');
+        // if (!err.stack) err = new Error(err.message);
+
+        var stacktrace = stackTrace.parse(err);
+
+        if (!stacktrace || !stacktrace.length) console.err('NO stacktrace', err, err.stack);
+
+        // if (!stacktrace || !stacktrace.length) {
+        //     console.log('===========================');
+        //     console.error(err);
+        //     console.error(err.stack);
+        //     console.log('===========================');
+        // }
+        // if (!stacktrace || !stacktrace.length)
+        // // return getContext(err);
+        // // stacktrace = stackTrace.parse(new Error('Empty error'));
+        //     stacktrace = stackTrace.parse(new Error(err.message));
+        // if (!stacktrace || !stacktrace.length) console.error('NO ERR!!');
+        // // console.log('stacktrace:', stacktrace);
+
+        for (var j = 0; j < stacktrace.length; j++) {
             // console.log('stacktrace[' + j + '].fileName:', stacktrace[j].fileName);
             if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].fileName.deepIndexOf(config.ignore) == -1)
                 return attachBaseFilenameToStacktrace(stacktrace, j);
@@ -196,6 +222,8 @@ function getContext(err) {
 }
 
 function attachBaseFilenameToStacktrace(stacktrace, j) {
+    if (!stacktrace || !j || !stacktrace[j] || !stacktrace[j].fileName)
+        return;
     stacktrace[j].baseFilename = (!j ? '*' : '') + getBaseFilename(stacktrace[j].fileName);
     stacktrace[j].baseFolderAndFilename = getBaseFolderAndFilename(stacktrace[j].fileName, stacktrace[j].lineNumber);
     stacktrace[j].stackTrail = getStackTrail(stacktrace);
