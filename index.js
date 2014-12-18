@@ -74,7 +74,7 @@ function Prelog(consoleLevel) {
                 console.error.apply(console, arguments);
             }
         } catch (err) {
-            console.error(err.stack);
+            Unclog.prototype.err(err);
         }
     }
 }
@@ -192,38 +192,15 @@ function getContext(err) {
         else
             throw new Error('');
     } catch (err) {
-        if (!err) console.err('NO ERR');
-        // if (!err.stack) err = new Error(err.message);
-
         var stacktrace = stackTrace.parse(err);
-
-        if (!stacktrace || !stacktrace.length) console.err('NO stacktrace', err, err.stack);
-
-        // if (!stacktrace || !stacktrace.length) {
-        //     console.log('===========================');
-        //     console.error(err);
-        //     console.error(err.stack);
-        //     console.log('===========================');
-        // }
-        // if (!stacktrace || !stacktrace.length)
-        // // return getContext(err);
-        // // stacktrace = stackTrace.parse(new Error('Empty error'));
-        //     stacktrace = stackTrace.parse(new Error(err.message));
-        // if (!stacktrace || !stacktrace.length) console.error('NO ERR!!');
-        // // console.log('stacktrace:', stacktrace);
-
-        for (var j = 0; j < stacktrace.length; j++) {
-            // console.log('stacktrace[' + j + '].fileName:', stacktrace[j].fileName);
+        for (var j = 0; j < stacktrace.length; j++)
             if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].fileName.deepIndexOf(config.ignore) == -1)
                 return attachBaseFilenameToStacktrace(stacktrace, j);
-        }
         return attachBaseFilenameToStacktrace(stacktrace, 2);
     }
 }
 
 function attachBaseFilenameToStacktrace(stacktrace, j) {
-    if (!stacktrace || !j || !stacktrace[j] || !stacktrace[j].fileName)
-        return;
     stacktrace[j].baseFilename = (!j ? '*' : '') + getBaseFilename(stacktrace[j].fileName);
     stacktrace[j].baseFolderAndFilename = getBaseFolderAndFilename(stacktrace[j].fileName, stacktrace[j].lineNumber);
     stacktrace[j].stackTrail = getStackTrail(stacktrace);
