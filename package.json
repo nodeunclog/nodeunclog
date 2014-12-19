@@ -1,19 +1,19 @@
 {
   "name": "unclog",
-  "version": "2.4.3",
+  "version": "2.4.2",
   "author": "nodeunclog <nodeunclog@gmail.com>",
   "repository": {
     "url": "https://github.com/nodeunclog/nodeunclog"
   },
   "dependencies": {
-    "long-stack-traces": "latest",
-    "on-finished": "latest",
-    "socket.io-events": "latest",
-    "stack-trace": "latest",
+    "long-stack-traces": "",
+    "on-finished": "",
+    "socket.io-events": "",
+    "stack-trace": "",
     "deep-index-of": "<0.2",
     "to-short-string": "<0.2",
-    "ua-parser": "latest",
-    "utils-merge": "latest"
+    "ua-parser": "",
+    "utils-merge": ""
   },
   "description": "unclog your console log",
   "bugs": {
