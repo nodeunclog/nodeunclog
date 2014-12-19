@@ -134,7 +134,10 @@ function Request(req, res, next) {
             clearTimeout(logTimeout);
             var status = '[' + (res._header ? (res.statusCode || '...') : 'timeout') + ']';
             // Unclog(ip || method || UnclogRequest.context || method)[res.statusCode > 400 ? 'error' : 'verbose'](method, url, status, '|', ip, toShortString(useragent, 10, 10));
-            Unclog.prototype[res.statusCode > 400 ? 'error' : 'verbose'](method, status, url, '|', ip, toShortString(useragent, 10, 10));
+            Unclog.prototype[(
+                (res.statusCode > 400) ||
+                (isNaN(res.statusCode))
+            ) ? 'error' : 'verbose'](method, status, url, '|', ip, toShortString(useragent, 10, 10));
             // Unclog(method)[res.statusCode > 400 ? 'error' : 'verbose'](method, url, status, '|', ip, useragent);
         }
     } catch (err) {
