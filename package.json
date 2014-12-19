@@ -6,14 +6,14 @@
     "url": "https://github.com/nodeunclog/nodeunclog"
   },
   "dependencies": {
-    "long-stack-traces": "",
-    "on-finished": "",
-    "socket.io-events": "",
-    "stack-trace": "",
+    "long-stack-traces": "latest",
+    "on-finished": "latest",
+    "socket.io-events": "latest",
+    "stack-trace": "latest",
     "deep-index-of": "<0.2",
     "to-short-string": "<0.2",
-    "ua-parser": "",
-    "utils-merge": ""
+    "ua-parser": "latest",
+    "utils-merge": "latest"
   },
   "description": "unclog your console log",
   "bugs": {
