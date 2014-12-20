@@ -54,7 +54,8 @@ function Prelog(consoleLevel) {
     var baseColor = consoleLevelColor(1)[0];
     var resetColor = consoleLevelColor('reset');
     var bullet = consoleLevelBullet(number);
-    return function() {
+    return function(msg) {
+        if (!msg) return;
         try {
             var context = getContext.apply(null, arguments);
             var string = expandConsoleArguments(arguments, consoleLevelNumber(consoleLevel));
