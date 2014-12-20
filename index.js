@@ -44,6 +44,7 @@ Unclog.prototype.error = Unclog.prototype.err;
 // Unclog.prototype.error = console.error;
 // Unclog.prototype.error = console.error = Unclog.prototype.err;
 console.err = console.error;
+console.debug = console.log;
 
 function Prelog(consoleLevel) {
     var level = consoleLevel;
@@ -127,15 +128,16 @@ function Request(req, res, next) {
         var url = req.url;
         var ip = (req.headers['x-forwarded-for'] || req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress));
         var useragent = '(' + require('ua-parser').parse(req.headers['user-agent']).ua.toString() + ')';
-        var logTimeout = setTimeout(log, 30000);
+        var logTimeout = setTimeout(log, config.requestTimeout);
         onFinished(res, log);
         return next();
 
         function log() {
             clearTimeout(logTimeout);
-            var status = '[' + (res._header ? (res.statusCode || '...') : 'timeout') + ']';
+            var status = '[' + (res._header ? (res.statusCode || '???') : ('timeout:' + (parseInt(config.requestTimeout / 1000)) + 's')) + ']';
             // Unclog(ip || method || UnclogRequest.context || method)[res.statusCode > 400 ? 'error' : 'verbose'](method, url, status, '|', ip, toShortString(useragent, 10, 10));
             Unclog.prototype[(
+                (!res._header || !res.statusCode) ||
                 (res.statusCode > 400) ||
                 (isNaN(res.statusCode))
             ) ? 'error' : 'verbose'](method, status, url, '|', ip, toShortString(useragent, 10, 10));

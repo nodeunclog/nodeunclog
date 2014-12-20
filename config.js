@@ -60,4 +60,7 @@ config.paddingDelimiter = '…';
 // backtrace
 config.backtrace = false;
 
+
+config.requestTimeout = 30 * 1000;
+
 module.exports = config;
