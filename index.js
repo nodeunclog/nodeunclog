@@ -1,4 +1,4 @@
-if (0 || process.env.skipunclog) {
+if (0 || process.env.skipunclog || process.env.nounclog) {
     module.exports = require('./skip');
     return;
 }
@@ -339,3 +339,9 @@ function modifiedUtil(options) {
 }
 
 module.exports = new Unclog;
+
+process.on('uncaughtException', function(err) {
+    Unclog.prototype.err(err);
+    Unclog.prototype.err('uncaughtException. Exiting');
+    process.exit(1);
+});
