@@ -140,7 +140,7 @@ function Request(req, res, next) {
                 (!res._header || !res.statusCode) ||
                 (res.statusCode > 400) ||
                 (isNaN(res.statusCode))
-            ) ? 'error' : 'verbose'](method, status, url, '|', ip, toShortString(useragent, 10, 10));
+            ) ? 'error' : 'verbose'](method, status, url, '|', ip, toShortString(useragent, 10, 10), ((new Date()).toISOString()));
             // Unclog(method)[res.statusCode > 400 ? 'error' : 'verbose'](method, url, status, '|', ip, useragent);
         }
     } catch (err) {
