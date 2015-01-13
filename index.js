@@ -173,9 +173,8 @@ socketRouter.on(function(socket, arguments, next) {
 });
 Unclog.prototype.socket = function() {
     var io = this;
-    if (io && !io.length && io.on) {
+    if (io && !io.length && io.on)
         io.on('connection', ioHandlerGetter('verbose', 'connected'));
-    }
     if (arguments.length)
         return socketRouter(arguments[0], arguments[1]);
     else
