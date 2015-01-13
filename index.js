@@ -174,24 +174,15 @@ socketRouter.on(function(socket, arguments, next) {
 Unclog.prototype.socket = function() {
     var io = this;
     if (io && !io.length && io.on)
-        io.on('connection', ioHandlerGetter('verbose', 'connected'));
-    if (arguments.length)
-        return socketRouter(arguments[0], arguments[1]);
-    else
-        return socketRouter;
-
-    function ioHandlerGetter(level, msg) {
-        return ioHandler;
-
-        function ioHandler(socket) {
+        io.on('connection', function(socket) {
             var req = socket.request;
             // var method = req.method.toUpperCase();
             var url = req.url;
             var ip = (req.headers['x-forwarded-for'] || req.ip || req.address || req._remoteAddress || (req.connection && req.connection.remoteAddress));
             var useragent = '(' + require('ua-parser').parse(req.headers['user-agent']).ua.toString() + ')';
             var referer = URL.parse(req.headers.referer);
-            Unclog.prototype[level](
-                'SOCKET', msg,
+            Unclog.prototype['verbose'](
+                'SOCKET', 'connection',
                 toShortString(socket.id), toShortString(socket.request.sessionID), '|',
                 referer.host + toShortString(referer.path) + toShortString(referer.query), '|',
                 // url, '|',
@@ -200,7 +191,7 @@ Unclog.prototype.socket = function() {
             );
             // Unclog.prototype.verbose('Socket connected');
             socket.on('disconnect', function() {
-                Unclog.prototype[level](
+                Unclog.prototype['verbose'](
                     'SOCKET', 'disconnect',
                     toShortString(socket.id), toShortString(socket.request.sessionID), '|',
                     referer.host + toShortString(referer.path) + toShortString(referer.query), '|',
@@ -209,8 +200,11 @@ Unclog.prototype.socket = function() {
                     new Date().toISOString()
                 );
             });
-        }
-    }
+        });
+    if (arguments.length)
+        return socketRouter(arguments[0], arguments[1]);
+    else
+        return socketRouter;
 };
 
 
