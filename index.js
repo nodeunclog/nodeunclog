@@ -297,13 +297,13 @@ function consoleLevelColor(consoleLevelNumber) {
         ['\x1b[36;1m', '\x1b[47;1;36;1m'], // silly
         ['\x1b[30;1m', '\x1b[47;1;30;1m'], // verbose
         ['\x1b[30;22m', '\x1b[47;1;30;1m'], // log
-        ['\x1b[34;1m', '\x1b[47;1;34;1m'], // info
-        ['\x1b[33;1m', '\x1b[47;1;33;1m'], // pass
-        ['\x1b[32;1m', '\x1b[47;1;32;1m'], // start
+        ['\x1b[34;22m', '\x1b[47;1;34;1m'], // info
+        ['\x1b[33;22m', '\x1b[47;1;33;1m'], // pass
+        ['\x1b[32;22m', '\x1b[47;1;32;1m'], // start
         ['\x1b[32;1m', '\x1b[47;1;32;1m'], // end
         ['\x1b[31;1m', '\x1b[47;1;31;1m'], // warn
         ['\x1b[31;1m', '\x1b[47;1;31;1m'], // err
-        ['\x1b[35;1m', '\x1b[47;1;35;1m'], // fail
+        ['\x1b[35;22m', '\x1b[47;1;35;1m'], // fail
         ['\x1b[34;1m', '\x1b[47;1;34;1m'], // debug
     ];
     colors.reset = '\x1b[30;22m';
