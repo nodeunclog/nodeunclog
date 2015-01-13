@@ -38,6 +38,8 @@ config.extraWidth = config.width * (1 - separationFractionOfContentAndExtras);
 
 // ignore
 config.ignore = [
+    'mongodb',
+    'connect-mongo',
     'fs.js',
     'authenticator',
     'express',

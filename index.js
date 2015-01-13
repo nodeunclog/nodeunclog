@@ -56,7 +56,7 @@ function Prelog(consoleLevel) {
     var resetColor = consoleLevelColor('reset');
     var bullet = consoleLevelBullet(number);
     return function(msg) {
-        if (!msg) return;
+        // if (!msg) return;
         try {
             var context = getContext.apply(null, arguments);
             var string = expandConsoleArguments(arguments, consoleLevelNumber(consoleLevel));
@@ -96,6 +96,7 @@ function getExtrasPadding(extras, availableWidthForExtras) {
 }
 
 function truncateExtras(string, availableWidthForExtras, fraction) {
+    if (!string || !string.length) return '';
     var length = availableWidthForExtras - string.length;
     if (length < 0)
         string = toShortString(string, availableWidthForExtras, fraction);
@@ -207,6 +208,7 @@ function getContext(err) {
 }
 
 function attachBaseFilenameToStacktrace(stacktrace, j) {
+    if (!stacktrace || !stacktrace[j]) return '';
     stacktrace[j].baseFilename = (!j ? '*' : '') + getBaseFilename(stacktrace[j].fileName);
     stacktrace[j].baseFolderAndFilename = getBaseFolderAndFilename(stacktrace[j].fileName, stacktrace[j].lineNumber);
     stacktrace[j].stackTrail = getStackTrail(stacktrace);
@@ -226,6 +228,7 @@ function getBaseFolderAndFilename(file, additionalInfo) {
 }
 
 function getStackTrail(stacktrace, cutoff) {
+    if (!stacktrace || !stacktrace.length) return '';
     var stackTrail = '';
     for (var j = 0; j < ((cutoff && cutoff < stacktrace.length) ? cutoff : stacktrace.length); j++)
         if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].lineNumber)
@@ -304,8 +307,8 @@ function consoleLevelColor(consoleLevelNumber) {
         ['\x1b[34;1m', '\x1b[47;1;34;1m'], // debug
     ];
     // colors.reset = '\x1b[30;2m';
-    // colors.reset = '\x1b[0m';
-    colors.reset = '\x1b[39;1m';
+    colors.reset = '\x1b[0m';
+    // colors.reset = '\x1b[39;1m';
     return colors[consoleLevelNumber];
 }
 
@@ -342,6 +345,6 @@ module.exports = new Unclog;
 
 process.on('uncaughtException', function(err) {
     Unclog.prototype.err(err);
-    Unclog.prototype.err('uncaughtException. Exiting');
+    Unclog.prototype.err('Uncaught Exception. Exiting...\u0007\u0007');
     process.exit(1);
 });
