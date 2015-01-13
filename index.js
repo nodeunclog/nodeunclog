@@ -487,6 +487,7 @@ module.exports = new Unclog;
 
 process.on('uncaughtException', function(err) {
     Unclog.prototype.err(err);
+    Unclog.prototype.err(err.stack);
     Unclog.prototype.err('Uncaught Exception. Exiting...\u0007\u0007');
     process.exit(1);
 });
