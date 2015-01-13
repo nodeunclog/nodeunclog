@@ -294,24 +294,44 @@ function consoleLevelBullet(consoleLevelNumber) {
 
 function consoleLevelColor(consoleLevelNumber) {
     var colors = [
-        ['\x1b[36;2m', '\x1b[47;1;36;2m'], // silly
+        ['\x1b[36;1m', '\x1b[47;1;36;1m'], // silly
         ['\x1b[30;1m', '\x1b[47;1;30;1m'], // verbose
-        ['\x1b[30;2m', '\x1b[47;1;30;2m'], // log
-        ['\x1b[34;2m', '\x1b[47;1;34;2m'], // info
-        ['\x1b[33;2m', '\x1b[47;1;33;2m'], // pass
-        ['\x1b[32;2m', '\x1b[47;1;32;2m'], // start
+        ['\x1b[30;1m', '\x1b[47;1;30;1m'], // log
+        ['\x1b[34;1m', '\x1b[47;1;34;1m'], // info
+        ['\x1b[33;1m', '\x1b[47;1;33;1m'], // pass
+        ['\x1b[32;1m', '\x1b[47;1;32;1m'], // start
         ['\x1b[32;1m', '\x1b[47;1;32;1m'], // end
         ['\x1b[31;1m', '\x1b[47;1;31;1m'], // warn
-        ['\x1b[31;2m', '\x1b[47;1;31;2m'], // err
-        ['\x1b[35;2m', '\x1b[47;1;35;2m'], // fail
+        ['\x1b[31;1m', '\x1b[47;1;31;1m'], // err
+        ['\x1b[35;1m', '\x1b[47;1;35;1m'], // fail
         ['\x1b[34;1m', '\x1b[47;1;34;1m'], // debug
     ];
+    colors.reset = '\x1b[30;1m';
     // colors.reset = '\x1b[30;2m';
-    colors.reset = '\x1b[0m';
+    // colors.reset = '\x1b[0m';
     // colors.reset = '\x1b[39;1m';
+    // colors.reset = '\x1b[0m\x1b[30;1m';
+    // colors.reset = '\x1b[49;1;39;1m';
     return colors[consoleLevelNumber];
 }
 
+
+// console.log(' > ;\x1b[30;2m 30;2m < ');
+// console.log(' > ;\x1b[31;2m 31;2m < ');
+// console.log(' > ;\x1b[32;2m 32;2m < ');
+// console.log(' > ;\x1b[33;2m 33;2m < ');
+// console.log(' > ;\x1b[34;2m 34;2m < ');
+// console.log(' > ;\x1b[35;2m 35;2m < ');
+// console.log(' > ;\x1b[36;2m 36;2m < ');
+// console.log(' > ;\x1b[37;2m 37;2m < ');
+// console.log(' > ;\x1b[30;1m 30;1m < ');
+// console.log(' > ;\x1b[31;1m 31;1m < ');
+// console.log(' > ;\x1b[32;1m 32;1m < ');
+// console.log(' > ;\x1b[33;1m 33;1m < ');
+// console.log(' > ;\x1b[34;1m 34;1m < ');
+// console.log(' > ;\x1b[35;1m 35;1m < ');
+// console.log(' > ;\x1b[36;1m 36;1m < ');
+// console.log(' > ;\x1b[37;1m 37;1m < ');
 
 
 
