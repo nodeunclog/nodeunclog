@@ -14,6 +14,8 @@ var config = require('./config');
 var toShortString = require('to-short-string');
 
 var path = require('path');
+var Path = require('path');
+var URL = require('url');
 var onFinished = require('on-finished');
 
 var stackTrace = require('stack-trace');
@@ -141,7 +143,11 @@ function Request(req, res, next) {
                 (!res._header || !res.statusCode) ||
                 (res.statusCode > 400) ||
                 (isNaN(res.statusCode))
-            ) ? 'error' : 'verbose'](method, status, url, '|', ip, toShortString(useragent, 10, 10), ((new Date()).toISOString()));
+            ) ? 'error' : 'verbose'](
+                method, status, url, '|',
+                ip, toShortString(useragent, 10, 10), '|',
+                new Date().toISOString()
+            );
             // Unclog(method)[res.statusCode > 400 ? 'error' : 'verbose'](method, url, status, '|', ip, useragent);
         }
     } catch (err) {
@@ -166,10 +172,46 @@ socketRouter.on(function(socket, arguments, next) {
     }
 });
 Unclog.prototype.socket = function() {
+    var io = this;
+    if (io && !io.length && io.on) {
+        io.on('connection', ioHandlerGetter('verbose', 'connected'));
+    }
     if (arguments.length)
         return socketRouter(arguments[0], arguments[1]);
     else
         return socketRouter;
+
+    function ioHandlerGetter(level, msg) {
+        return ioHandler;
+
+        function ioHandler(socket) {
+            var req = socket.request;
+            // var method = req.method.toUpperCase();
+            var url = req.url;
+            var ip = (req.headers['x-forwarded-for'] || req.ip || req.address || req._remoteAddress || (req.connection && req.connection.remoteAddress));
+            var useragent = '(' + require('ua-parser').parse(req.headers['user-agent']).ua.toString() + ')';
+            var referer = URL.parse(req.headers.referer);
+            Unclog.prototype[level](
+                'SOCKET', msg,
+                toShortString(socket.id), toShortString(socket.request.sessionID), '|',
+                referer.host + toShortString(referer.path) + toShortString(referer.query), '|',
+                // url, '|',
+                ip, toShortString(useragent, 10, 10), '|',
+                new Date().toISOString()
+            );
+            // Unclog.prototype.verbose('Socket connected');
+            socket.on('disconnect', function() {
+                Unclog.prototype[level](
+                    'SOCKET', 'disconnect',
+                    toShortString(socket.id), toShortString(socket.request.sessionID), '|',
+                    referer.host + toShortString(referer.path) + toShortString(referer.query), '|',
+                    // url, '|',
+                    ip, toShortString(useragent, 10, 10), '|',
+                    new Date().toISOString()
+                );
+            });
+        }
+    }
 };
 
 
