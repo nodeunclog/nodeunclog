@@ -10,7 +10,6 @@ if (0 || process.env.blankunclog) {
 
 var util = require('util');
 var config = require('./config');
-var colors = require('colors');
 
 var toShortString = require('to-short-string');
 
@@ -36,20 +35,6 @@ var consoleLevels = [
     'fail',
     'debug',
 ];
-colors.setTheme({
-    base: 'bright',
-    silly: 'rainbow',
-    verbose: 'cyan',
-    info: 'blue',
-    pass: 'yellow',
-    start: 'green',
-    end: 'green',
-    warn: 'red',
-    err: 'red',
-    fail: 'magenta',
-    debug: 'blue',
-    error: 'red',
-});
 
 function Unclog(customContext) {};
 for (var j = 0; j < consoleLevels.length; j++)
@@ -83,10 +68,10 @@ function Prelog(consoleLevel) {
             var extras = stackTrail;
             extras = truncateExtras(extras, availableWidthForExtras, 1);
             var extrasPadding = getExtrasPadding(extras, availableWidthForExtras);
-            extras = extrasPadding['dim'] + bullet[2][level] + ' ' + extras['dim'];
+            extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
             try {
                 // console[basicLevel].call(console, color + bullet[0], string, stringPadding + color, extras);
-                console[basicLevel].call(console, bullet[0][level], string[level], extras);
+                console[basicLevel].call(console, color + bullet[0], string, extras, resetColor);
             } catch (err) {
                 console.error.apply(console, arguments);
             }
@@ -307,7 +292,6 @@ function consoleLevelBullet(consoleLevelNumber) {
     ][consoleLevelNumber]);
 }
 
-
 function consoleLevelColor(consoleLevelNumber) {
     var colors = [
         ['\x1b[36;1m', '\x1b[47;1;36;1m'], // silly
@@ -328,7 +312,7 @@ function consoleLevelColor(consoleLevelNumber) {
     // colors.reset = '\x1b[39;1m';
     // colors.reset = '\x1b[0m\x1b[30;1m';
     // colors.reset = '\x1b[49;1;39;1m';
-    return colors;
+    return colors[consoleLevelNumber];
 }
 
 
