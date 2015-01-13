@@ -296,7 +296,7 @@ function consoleLevelColor(consoleLevelNumber) {
     var colors = [
         ['\x1b[36;1m', '\x1b[47;1;36;1m'], // silly
         ['\x1b[30;1m', '\x1b[47;1;30;1m'], // verbose
-        ['\x1b[30;1m', '\x1b[47;1;30;1m'], // log
+        ['\x1b[30;22m', '\x1b[47;1;30;1m'], // log
         ['\x1b[34;1m', '\x1b[47;1;34;1m'], // info
         ['\x1b[33;1m', '\x1b[47;1;33;1m'], // pass
         ['\x1b[32;1m', '\x1b[47;1;32;1m'], // start
@@ -306,7 +306,7 @@ function consoleLevelColor(consoleLevelNumber) {
         ['\x1b[35;1m', '\x1b[47;1;35;1m'], // fail
         ['\x1b[34;1m', '\x1b[47;1;34;1m'], // debug
     ];
-    colors.reset = '\x1b[30;1m';
+    colors.reset = '\x1b[30;22m';
     // colors.reset = '\x1b[30;2m';
     // colors.reset = '\x1b[0m';
     // colors.reset = '\x1b[39;1m';
@@ -324,6 +324,83 @@ function consoleLevelColor(consoleLevelNumber) {
 // console.log(' > ;\x1b[35;2m 35;2m < ');
 // console.log(' > ;\x1b[36;2m 36;2m < ');
 // console.log(' > ;\x1b[37;2m 37;2m < ');
+
+// // console.debug('>>>\x1b[0m<<<');
+// console.log(' > ;\x1b[47;1;37;1m 47;1;37;1m < ');
+// console.log(' > ;\x1b[46;1;37;1m 46;1;37;1m < ');
+// console.log(' > ;\x1b[45;1;37;1m 45;1;37;1m < ');
+// console.log(' > ;\x1b[44;1;37;1m 44;1;37;1m < ');
+// console.log(' > ;\x1b[43;1;37;1m 43;1;37;1m < ');
+// console.log(' > ;\x1b[42;1;37;1m 42;1;37;1m < ');
+// console.log(' > ;\x1b[41;1;37;1m 41;1;37;1m < ');
+// console.log(' > ;\x1b[40;1;37;1m 40;1;37;1m < ');
+// console.log(' > ;\x1b[47;1;36;1m 47;1;36;1m < ');
+// console.log(' > ;\x1b[46;1;36;1m 46;1;36;1m < ');
+// console.log(' > ;\x1b[45;1;36;1m 45;1;36;1m < ');
+// console.log(' > ;\x1b[44;1;36;1m 44;1;36;1m < ');
+// console.log(' > ;\x1b[43;1;36;1m 43;1;36;1m < ');
+// console.log(' > ;\x1b[42;1;36;1m 42;1;36;1m < ');
+// console.log(' > ;\x1b[41;1;36;1m 41;1;36;1m < ');
+// console.log(' > ;\x1b[40;1;36;1m 40;1;36;1m < ');
+// console.log(' > ;\x1b[47;1;35;1m 47;1;35;1m < ');
+// console.log(' > ;\x1b[46;1;35;1m 46;1;35;1m < ');
+// console.log(' > ;\x1b[45;1;35;1m 45;1;35;1m < ');
+// console.log(' > ;\x1b[44;1;35;1m 44;1;35;1m < ');
+// console.log(' > ;\x1b[43;1;35;1m 43;1;35;1m < ');
+// console.log(' > ;\x1b[42;1;35;1m 42;1;35;1m < ');
+// console.log(' > ;\x1b[41;1;35;1m 41;1;35;1m < ');
+// console.log(' > ;\x1b[40;1;35;1m 40;1;35;1m < ');
+// console.log(' > ;\x1b[47;1;34;1m 47;1;34;1m < ');
+// console.log(' > ;\x1b[46;1;34;1m 46;1;34;1m < ');
+// console.log(' > ;\x1b[45;1;34;1m 45;1;34;1m < ');
+// console.log(' > ;\x1b[44;1;34;1m 44;1;34;1m < ');
+// console.log(' > ;\x1b[43;1;34;1m 43;1;34;1m < ');
+// console.log(' > ;\x1b[42;1;34;1m 42;1;34;1m < ');
+// console.log(' > ;\x1b[41;1;34;1m 41;1;34;1m < ');
+// console.log(' > ;\x1b[40;1;34;1m 40;1;34;1m < ');
+// console.log(' > ;\x1b[47;1;33;1m 47;1;33;1m < ');
+// console.log(' > ;\x1b[46;1;33;1m 46;1;33;1m < ');
+// console.log(' > ;\x1b[45;1;33;1m 45;1;33;1m < ');
+// console.log(' > ;\x1b[44;1;33;1m 44;1;33;1m < ');
+// console.log(' > ;\x1b[43;1;33;1m 43;1;33;1m < ');
+// console.log(' > ;\x1b[42;1;33;1m 42;1;33;1m < ');
+// console.log(' > ;\x1b[41;1;33;1m 41;1;33;1m < ');
+// console.log(' > ;\x1b[40;1;33;1m 40;1;33;1m < ');
+// console.log(' > ;\x1b[47;1;32;1m 47;1;32;1m < ');
+// console.log(' > ;\x1b[46;1;32;1m 46;1;32;1m < ');
+// console.log(' > ;\x1b[45;1;32;1m 45;1;32;1m < ');
+// console.log(' > ;\x1b[44;1;32;1m 44;1;32;1m < ');
+// console.log(' > ;\x1b[43;1;32;1m 43;1;32;1m < ');
+// console.log(' > ;\x1b[42;1;32;1m 42;1;32;1m < ');
+// console.log(' > ;\x1b[41;1;32;1m 41;1;32;1m < ');
+// console.log(' > ;\x1b[40;1;32;1m 40;1;32;1m < ');
+// console.log(' > ;\x1b[47;1;31;1m 47;1;31;1m < ');
+// console.log(' > ;\x1b[46;1;31;1m 46;1;31;1m < ');
+// console.log(' > ;\x1b[45;1;31;1m 45;1;31;1m < ');
+// console.log(' > ;\x1b[44;1;31;1m 44;1;31;1m < ');
+// console.log(' > ;\x1b[43;1;31;1m 43;1;31;1m < ');
+// console.log(' > ;\x1b[42;1;31;1m 42;1;31;1m < ');
+// console.log(' > ;\x1b[41;1;31;1m 41;1;31;1m < ');
+// console.log(' > ;\x1b[40;1;31;1m 40;1;31;1m < ');
+// console.log(' > ;\x1b[47;1;30;1m 47;1;30;1m < ');
+// console.log(' > ;\x1b[46;1;30;1m 46;1;30;1m < ');
+// console.log(' > ;\x1b[45;1;30;1m 45;1;30;1m < ');
+// console.log(' > ;\x1b[44;1;30;1m 44;1;30;1m < ');
+// console.log(' > ;\x1b[43;1;30;1m 43;1;30;1m < ');
+// console.log(' > ;\x1b[42;1;30;1m 42;1;30;1m < ');
+// console.log(' > ;\x1b[41;1;30;1m 41;1;30;1m < ');
+// console.log(' > ;\x1b[40;1;30;1m 40;1;30;1m < ');
+
+// console.debug('>>>\x1b[0m<<<');
+// console.log(' > ;\x1b[30;2m 30;2m < ');
+// console.log(' > ;\x1b[31;2m 31;2m < ');
+// console.log(' > ;\x1b[32;2m 32;2m < ');
+// console.log(' > ;\x1b[33;2m 33;2m < ');
+// console.log(' > ;\x1b[34;2m 34;2m < ');
+// console.log(' > ;\x1b[35;2m 35;2m < ');
+// console.log(' > ;\x1b[36;2m 36;2m < ');
+// console.log(' > ;\x1b[37;2m 37;2m < ');
+
 // console.log(' > ;\x1b[30;1m 30;1m < ');
 // console.log(' > ;\x1b[31;1m 31;1m < ');
 // console.log(' > ;\x1b[32;1m 32;1m < ');
@@ -332,6 +409,16 @@ function consoleLevelColor(consoleLevelNumber) {
 // console.log(' > ;\x1b[35;1m 35;1m < ');
 // console.log(' > ;\x1b[36;1m 36;1m < ');
 // console.log(' > ;\x1b[37;1m 37;1m < ');
+// console.log(' > ;\x1b[30;22m 30;4m < ');
+// console.log(' > ;\x1b[31;22m 31;4m < ');
+// console.log(' > ;\x1b[32;22m 32;4m < ');
+// console.log(' > ;\x1b[33;22m 33;4m < ');
+// console.log(' > ;\x1b[34;22m 34;4m < ');
+// console.log(' > ;\x1b[35;22m 35;4m < ');
+// console.log(' > ;\x1b[36;22m 36;4m < ');
+// console.log(' > ;\x1b[37;22m 37;4m < ');
+
+
 
 
 
