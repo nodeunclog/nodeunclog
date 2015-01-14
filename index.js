@@ -178,18 +178,8 @@ Unclog.prototype.socket = function() {
             var req = socket.request;
 
             var user = req.user;
-            if (user) {
-                var userString = 'User';
-                if ((typeof(user.logged_in) != 'undefined') && !user.logged_in)
-                    user = userString = 'Anon';
-                else {
-                    if (user.id || user._id)
-                        userString += '[' + toShortString(user.id || user._id) + ']';
-                    if (user.username || user.name || user.displayName || (user.emails && user.emails[0]))
-                        userString += '(' + toShortString(user.username || user.name || user.displayName || (user.emails && user.emails[0])) + ')';
-                    user = userString;
-                }
-            } else user = 'Anon';
+            if (user) user = toShortString(user);
+            else user = 'Anon';
             user += ' ' + toShortString(socket.id) + ' ' + toShortString(socket.request.sessionID);
 
             var url = URL.parse(req.url);
