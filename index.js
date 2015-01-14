@@ -180,7 +180,7 @@ Unclog.prototype.socket = function() {
             var user = req.user;
             if (user) user = toShortString(user);
             else user = 'Anon';
-            user += ' ' + toShortString(socket.id) + ' ' + toShortString(socket.request.sessionID);
+            user += ' ' + toShortString(socket.id) + ':' + toShortString(socket.request.sessionID);
 
             var url = URL.parse(req.url);
             url = url.host + toShortString(url.path) + toShortString(url.query);
