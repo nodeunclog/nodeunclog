@@ -176,6 +176,7 @@ Unclog.prototype.socket = function() {
     if (io && !io.length && io.on)
         io.on('connection', function(socket) {
             var req = socket.request;
+            var user = req.user;
             // var method = req.method.toUpperCase();
             var url = req.url;
             var ip = (req.headers['x-forwarded-for'] || req.ip || req.address || req._remoteAddress || (req.connection && req.connection.remoteAddress));
@@ -183,6 +184,7 @@ Unclog.prototype.socket = function() {
             var referer = URL.parse(req.headers.referer);
             Unclog.prototype['verbose'](
                 'SOCKET', 'connection',
+                user ? ('User' + (user.id ? ('[' + toShortString(user.id) + ']') : ('')) + (user.username ? ('(' + toShortString(user.username) + ')') : (''))) : '(anon)',
                 toShortString(socket.id), toShortString(socket.request.sessionID), '|',
                 referer.host + toShortString(referer.path) + toShortString(referer.query), '|',
                 // url, '|',
