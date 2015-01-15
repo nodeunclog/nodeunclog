@@ -8,6 +8,10 @@ if (0 || process.env.blankunclog) {
     return;
 }
 
+console.err = console.error;
+console.debug = console.log;
+
+
 var util = require('util');
 var config = require('./config');
 
@@ -39,47 +43,69 @@ var consoleLevels = [
 ];
 
 function Unclog(customContext) {};
-for (var j = 0; j < consoleLevels.length; j++)
-    Unclog.prototype[consoleLevels[j]] = Prelog(consoleLevels[j]);
+for (var j = 0; j < consoleLevels.length; j++) {
+    Unclog.prototype[consoleLevels[j]] = PrePrelog(consoleLevels[j]);
+    Unclog.prototype[consoleLevels[j]].stdout = PrePrelog(consoleLevels[j], true);
+}
+// console.debug(Unclog.prototype.log.stdout.toString());
 Unclog.prototype.error = Unclog.prototype.err;
 // Unclog.prototype.error = Unclog.prototype.err = console.error;
 // Unclog.prototype.error = console.error;
 // Unclog.prototype.error = console.error = Unclog.prototype.err;
-console.err = console.error;
-console.debug = console.log;
 
-function Prelog(consoleLevel) {
-    var level = consoleLevel;
-    var number = consoleLevelNumber(level);
-    var basicLevel = consoleLevelMapToBasicLevel(number);
-    var levelText = consoleLevelPaddedText(number);
-    var color = consoleLevelColor(number)[0];
-    var baseColor = consoleLevelColor(1)[0];
-    var resetColor = consoleLevelColor('reset');
-    var bullet = consoleLevelBullet(number);
-    return function(msg) {
-        // if (!msg) return;
+function PrePrelog(consoleLevel, stdout) {
+    var options = {};
+    options.consoleLevel = consoleLevel;
+    options.stdout = stdout;
+    var level = options.level = consoleLevel;
+    var number = options.number = consoleLevelNumber(level);
+    var basicLevel = options.basicLevel = consoleLevelMapToBasicLevel(number);
+    var levelText = options.levelText = consoleLevelPaddedText(number);
+    var color = options.color = consoleLevelColor(number)[0];
+    var baseColor = options.baseColor = consoleLevelColor(1)[0];
+    var resetColor = options.resetColor = consoleLevelColor('reset');
+    var bullet = options.bullet = consoleLevelBullet(number);
+    return Prelog.bind(options);
+}
+
+Prelog.prototype.stdout = process.stdout.write;
+
+function Prelog(msg) {
+    // if (!msg) return;
+    var options = this;
+    var consoleLevel = options.consoleLevel;
+    var stdout = options.stdout;
+    var level = options.level;
+    var number = options.number;
+    var basicLevel = options.basicLevel;
+    var levelText = options.levelText;
+    var color = options.color;
+    var baseColor = options.baseColor;
+    var resetColor = options.resetColor;
+    var bullet = options.bullet;
+    try {
+        var context = getContext.apply(null, arguments);
+        var string = expandConsoleArguments(arguments, consoleLevelNumber(consoleLevel));
+        var availableWidthForExtras = getAvailableWidthForExtras(string, config.width);
+        var stringPadding = getStringPadding(string, config.contentWidth);
+        var baseFilename = context.baseFilename;
+        var stackTrail = context.stackTrail;
+        // var extras = levelText + ' ' + baseFilename + ' ' + stackTrail;
+        var extras = stackTrail;
+        extras = truncateExtras(extras, availableWidthForExtras, 1);
+        var extrasPadding = getExtrasPadding(extras, availableWidthForExtras);
+        extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
         try {
-            var context = getContext.apply(null, arguments);
-            var string = expandConsoleArguments(arguments, consoleLevelNumber(consoleLevel));
-            var availableWidthForExtras = getAvailableWidthForExtras(string, config.width);
-            var stringPadding = getStringPadding(string, config.contentWidth);
-            var baseFilename = context.baseFilename;
-            var stackTrail = context.stackTrail;
-            // var extras = levelText + ' ' + baseFilename + ' ' + stackTrail;
-            var extras = stackTrail;
-            extras = truncateExtras(extras, availableWidthForExtras, 1);
-            var extrasPadding = getExtrasPadding(extras, availableWidthForExtras);
-            extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
-            try {
-                // console[basicLevel].call(console, color + bullet[0], string, stringPadding + color, extras);
+            // console[basicLevel].call(console, color + bullet[0], string, stringPadding + color, extras);
+            if (stdout)
+                process.stdout.write.call(process.stdout, color + bullet[0]+ string+ extras+ resetColor);
+            else
                 console[basicLevel].call(console, color + bullet[0], string, extras, resetColor);
-            } catch (err) {
-                console.error.apply(console, arguments);
-            }
         } catch (err) {
-            Unclog.prototype.err(err);
+            console.error.apply(console, arguments);
         }
+    } catch (err) {
+        Unclog.prototype.err(err);
     }
 }
 
@@ -180,7 +206,7 @@ Unclog.prototype.socket = function() {
             var user = req.user;
             if (user) user = toShortString(user);
             else user = 'Anon';
-            user += ' ' + toShortString(socket.id) + ':' + toShortString(socket.request.sessionID);
+            user += ' ' + toShortString(socket.id, 4, 2) + ':' + toShortString(socket.request.sessionID, 4, 2);
 
             var url = URL.parse(req.url);
             url = url.host + toShortString(url.path) + toShortString(url.query);
