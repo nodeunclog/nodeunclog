@@ -18,15 +18,16 @@ module.exports = function Request(req, res, next) {
         // }
 
 
-        var method = req.method.toUpperCase();
-        var url = req.url;
-        var ip = (req.headers['x-forwarded-for'] || req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress));
-        var useragent = '(' + parseUA(req.headers['user-agent']).ua.toString() + ')';
-        var logTimeout = setTimeout(log, config.requestTimeout);
         onFinished(res, log);
         return next();
 
         function log() {
+            var method = req.method.toUpperCase();
+            var url = req.url;
+            var ip = (req.headers['x-forwarded-for'] || req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress));
+            var useragent = '(' + parseUA(req.headers['user-agent']).ua.toString() + ')';
+            var logTimeout = setTimeout(log, config.requestTimeout);
+
             clearTimeout(logTimeout);
             if (res.statusCode == 304) return;
             var status = '[' + (res._header ? (res.statusCode || '???') : ('timeout:' + (parseInt(config.requestTimeout / 1000)) + 's')) + ']';
