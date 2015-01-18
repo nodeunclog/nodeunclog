@@ -18,7 +18,11 @@ module.exports = function Request(req, res, next) {
         // }
 
 
-        onFinished(res, log);
+        onFinished(res, function() {
+            // So that if an onFinished is also used in application,
+            // this onFinished will execute after that.
+            onFinished(res, log);
+        });
         return next();
 
         function log() {
