@@ -1,10 +1,10 @@
+var console = require('./');
 var config = require('./config');
 var onFinished = require('on-finished');
 var toShortString = require('to-short-string');
 var parseUA = require('ua-parser').parse;
 
 module.exports = function Request(req, res, next) {
-    var console = this;
     try {
         // var context = getBaseFilename();
         // It's currently impossible to get actualy filename. so many callbacks, even Error.Infinity doesn't help
@@ -56,8 +56,6 @@ module.exports = function Request(req, res, next) {
             message += ' | ';
             if (ip) message += ip + ' ';
             if (useragent) message += useragent;
-            message += ' | ';
-            message += new Date().toISOString();
 
             console[level](message);
         }

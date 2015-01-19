@@ -11,6 +11,8 @@ if (0 || process.env.blankunclog) {
 console.err = console.error;
 console.debug = console.log;
 
+module.exports = Unclog;
+
 
 var util = require('util');
 var config = require('./config');
@@ -42,16 +44,33 @@ var consoleLevels = [
     'debug',
 ];
 
-function Unclog(customContext) {};
+var Request = require('./request');
+var Socket = require('./socket');
+
+
 for (var j = 0; j < consoleLevels.length; j++) {
-    Unclog.prototype[consoleLevels[j]] = PrePrelog(consoleLevels[j]);
-    Unclog.prototype[consoleLevels[j]].stdout = PrePrelog(consoleLevels[j], true);
+    Unclog[consoleLevels[j]] = PrePrelog(consoleLevels[j]);
+    Unclog[consoleLevels[j]].stdout = PrePrelog(consoleLevels[j], true);
 }
-// console.debug(Unclog.prototype.log.stdout.toString());
-Unclog.prototype.error = Unclog.prototype.err;
-// Unclog.prototype.error = Unclog.prototype.err = console.error;
-// Unclog.prototype.error = console.error;
-// Unclog.prototype.error = console.error = Unclog.prototype.err;
+// console.debug(Unclog.log.stdout.toString());
+Unclog.error = Unclog.err;
+// Unclog.error = Unclog.err = console.error;
+// Unclog.error = console.error;
+// Unclog.error = console.error = Unclog.err;
+
+Unclog.request = Unclog;
+Unclog.socket = Unclog;
+
+function Unclog(customContext) {
+    if (arguments.length >= 3)
+        if (arguments[arguments.length - 2].req)
+            if (arguments[arguments.length - 3].res)
+                return Request.apply(this, arguments);
+    if (arguments.length == 2)
+        if (arguments[0].nsp)
+            return Socket.apply(this, arguments);
+    return Unclog.bind(this);
+};
 
 function PrePrelog(consoleLevel, stdout) {
     var options = {};
@@ -92,6 +111,7 @@ function Prelog(msg) {
         var stackTrail = context.stackTrail;
         // var extras = levelText + ' ' + baseFilename + ' ' + stackTrail;
         var extras = stackTrail;
+        extras = '[' + new Date().toISOString() + ']' + extras;
         extras = truncateExtras(extras, availableWidthForExtras, 1);
         var extrasPadding = getExtrasPadding(extras, availableWidthForExtras);
         extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
@@ -105,7 +125,7 @@ function Prelog(msg) {
             console.error.apply(console, arguments);
         }
     } catch (err) {
-        Unclog.prototype.err(err);
+        Unclog.err(err);
     }
 }
 
@@ -140,61 +160,17 @@ function getAvailableWidthForExtras(content, totalWidth) {
     return availableWidthForExtras;
 }
 
-var Request = require('./request').bind(Unclog.prototype);
-Unclog.prototype.request = function(req, res, next) {
-    if (next && (typeof(next) == 'function'))
-        return Request(req, res, next);
-    else return Request;
-};
+// var Request = require('./request').bind(Unclog.prototype);
+// Unclog.request = function(req, res, next) {
+//     if (next && (typeof(next) == 'function'))
+//         return Request(req, res, next);
+//     else return Request;
+// };
 
 
 
-var socketRouter = require('socket.io-events')();
-socketRouter.on(function(socket, arguments, next) {
-    try {
-        Unclog.prototype.verbose('SOCKET.on("' + toShortString(arguments[0], 10, 10) + '"' + (arguments[1] ? (', ' + toShortString(JSON.stringify(arguments[1]), 15, 15)) : '') + ')');
-        next();
-    } catch (err) {
-        Unclog.prototype.err(err || new Error('socket error'));
-    }
-});
-Unclog.prototype.socket = function() {
-    var io = this;
-    if (io && !io.length && io.on)
-        io.on('connection', function(socket) {
-            var req = socket.request;
 
-            var user = req.user;
-            if (user) user = toShortString(user);
-            else user = 'Anon';
-            user += ' ' + toShortString(socket.id, 4, 2) + ':' + toShortString(socket.request.sessionID, 4, 2);
 
-            var url = URL.parse(req.url);
-            url = url.host + toShortString(url.path) + toShortString(url.query);
-
-            var referer = URL.parse(req.headers.referer);
-            referer = referer.host + toShortString(referer.path) + toShortString(referer.query);
-
-            var ip = (req.headers['x-forwarded-for'] || req.ip || req.address || req._remoteAddress || (req.connection && req.connection.remoteAddress));
-
-            var useragent = '(' + toShortString((require('ua-parser').parse(req.headers['user-agent']).ua.toString()), 10, 10) + ')';
-
-            log('connection');
-
-            socket.on('disconnect', function() {
-                log('disconnect');
-            });
-
-            function log(msg) {
-                // console.debug(msg);
-                Unclog.prototype['verbose']('SOCKET', msg, '|', user, '|', referer, '|', ip, useragent, '|', new Date().toISOString());
-            }
-        });
-    if (arguments.length)
-        return socketRouter(arguments[0], arguments[1]);
-    else
-        return socketRouter;
-};
 
 
 function expandConsoleArguments(arguments, depth) {
@@ -472,11 +448,10 @@ function modifiedUtil(options) {
     })(util);
 }
 
-module.exports = new Unclog;
 
 process.on('uncaughtException', function(err) {
-    Unclog.prototype.err(err);
-    Unclog.prototype.err(err.stack);
-    Unclog.prototype.err('Uncaught Exception. Exiting...\u0007\u0007');
+    Unclog.err(err);
+    Unclog.err(err.stack);
+    Unclog.err('Uncaught Exception. Exiting...\u0007\u0007');
     process.exit(1);
 });
