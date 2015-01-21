@@ -26,12 +26,19 @@ module.exports = function Request(req, res, next) {
         return next();
 
         function log() {
-            var method = req.method.toUpperCase();
             var url = req.url;
-            if (req.info)
+            try {
+                var method = req.method.toUpperCase();
+            } catch (err) {}
+            try {
                 var info = '(' + toShortString(req.info, 20) + ')';
-            var ip = (req.headers['x-forwarded-for'] || req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress));
-            var useragent = '(' + toShortString(parseUA(req.headers['user-agent']).ua.toString(), 20) + ')';
+            } catch (err) {}
+            try {
+                var ip = (req.headers['x-forwarded-for'] || req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress));
+            } catch (err) {}
+            try {
+                var useragent = '(' + toShortString(parseUA(req.headers['user-agent']).ua.toString(), 20) + ')';
+            } catch (err) {}
             var logTimeout = setTimeout(log, config.requestTimeout);
 
             clearTimeout(logTimeout);
