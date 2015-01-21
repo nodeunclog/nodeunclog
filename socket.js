@@ -16,18 +16,23 @@ module.exports = function Socket(socket, next) {
     if (socket.request.sessionID)
         user += ':' + toShortString(socket.request.sessionID, 4, 2);
 
-    var url = URL.parse(req.url);
-    url = url.host + toShortString(url.path) + toShortString(url.query);
-
-    var referer = URL.parse(req.headers.referer);
-    referer = referer.host + toShortString(referer.path) + toShortString(referer.query);
-
-    var ip = (req.headers['x-forwarded-for'] || req.ip || req.address || req._remoteAddress || (req.connection && req.connection.remoteAddress));
-    var useragent = '(' + toShortString((UAparser(req.headers['user-agent']).ua.toString()), 10, 10) + ')';
+    try {
+        var url = URL.parse(req.url);
+        url = url.host + toShortString(url.path) + toShortString(url.query);
+    } catch (err) {}
+    try {
+        var referer = URL.parse(req.headers.referer);
+        referer = referer.host + toShortString(referer.path) + toShortString(referer.query);
+    } catch (err) {}
+    try {
+        var ip = (req.headers['x-forwarded-for'] || req.ip || req.address || req._remoteAddress || (req.connection && req.connection.remoteAddress));
+    } catch (err) {}
+    try {
+        var useragent = '(' + toShortString((UAparser(req.headers['user-agent']).ua.toString()), 10, 10) + ')';
+    } catch (err) {}
 
 
     var router = socketIoEventsRouter();
-
 
     log('Connection');
 
@@ -52,6 +57,13 @@ module.exports = function Socket(socket, next) {
     }
 
     function log(msg) {
+        var message = 'SOCKET ';
+        if (msg) message += msg;
+        if (user) message += ' | ' + user;
+        if (referer) message += ' | ' + referer;
+        if (ip || useragent) message += ' | ';
+        if (ip) message += ip + ' ';
+        if (useragent) message += useragent;
         console['verbose']('SOCKET', msg, '|', user, '|', referer, '|', ip, useragent);
     }
 
