@@ -30,9 +30,8 @@ module.exports = function Request(req, res, next) {
             try {
                 var method = req.method.toUpperCase();
             } catch (err) {}
-            try {
+            if (req.info)
                 var info = '(' + toShortString(req.info, 20) + ')';
-            } catch (err) {}
             try {
                 var ip = (req.headers['x-forwarded-for'] || req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress));
             } catch (err) {}
