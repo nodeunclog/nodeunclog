@@ -103,18 +103,20 @@ function Prelog(msg) {
     var resetColor = options.resetColor;
     var bullet = options.bullet;
     try {
-        var context = getContext.apply(null, arguments);
         var string = expandConsoleArguments(arguments, consoleLevelNumber(consoleLevel));
-        var availableWidthForExtras = getAvailableWidthForExtras(string, config.width);
-        var stringPadding = getStringPadding(string, config.contentWidth);
-        var baseFilename = context.baseFilename;
-        var stackTrail = context.stackTrail;
-        // var extras = levelText + ' ' + baseFilename + ' ' + stackTrail;
-        var extras = stackTrail;
-        extras = '[' + new Date().toISOString() + ']' + extras;
-        extras = truncateExtras(extras, availableWidthForExtras, 1);
-        var extrasPadding = getExtrasPadding(extras, availableWidthForExtras);
-        extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
+        if(!stdout){
+            var context = getContext.apply(null, arguments);
+            var availableWidthForExtras = getAvailableWidthForExtras(string, config.width);
+            var stringPadding = getStringPadding(string, config.contentWidth);
+            var baseFilename = context.baseFilename;
+            var stackTrail = context.stackTrail;
+            // var extras = levelText + ' ' + baseFilename + ' ' + stackTrail;
+            var extras = stackTrail;
+            extras = truncateExtras(extras, availableWidthForExtras, 1);
+            extras += ' [' + new Date().toISOString() + ']';
+            var extrasPadding = getExtrasPadding(extras, availableWidthForExtras);
+            extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
+        }
         try {
             // console[basicLevel].call(console, color + bullet[0], string, stringPadding + color, extras);
             if (stdout)
@@ -152,7 +154,15 @@ function truncateExtras(string, availableWidthForExtras, fraction) {
 }
 
 function getAvailableWidthForExtras(content, totalWidth) {
+
+    if (content.length <= config.thresholdContentWidth)
+        totalWidth = config.thresholdContentWidth;
+
     var availableWidthForExtras = totalWidth - content.length;
+
+    // console.debug('content.length:', content.length);
+    // console.debug('availableWidthForExtras:', availableWidthForExtras);
+
     if (content.indexOf('\n') > -1)
         availableWidthForExtras = totalWidth - content.split('\n').pop().length
     if (content.indexOf('\r') > -1)

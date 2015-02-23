@@ -19,7 +19,8 @@ function color() {
 config.color = color();
 
 // width
-var maxContentWidth = 150;
+var thresholdContentWidth = config.thresholdContentWidth = 161;
+var maxContentWidth = config.maxContentWidth = 150;
 if (!isNaN(parseInt(process.env.unclogMaxContentWidth)))
     maxContentWidth = parseInt(process.env.unclogMaxContentWidth);
 var separationFractionOfContentAndExtras = 2 / 3;
@@ -32,7 +33,7 @@ function width() {
 }
 config.width = width();
 if (!isNaN(parseInt(process.env.unclogWidth)))
-    config.width = parseInt(process.env.unclogWidth);
+    config.width = thresholdContentWidth = config.thresholdContentWidth = parseInt(process.env.unclogWidth);
 config.contentWidth = config.width * separationFractionOfContentAndExtras;
 config.extraWidth = config.width * (1 - separationFractionOfContentAndExtras);
 
@@ -53,6 +54,8 @@ config.ignore = [
     'node.js',
     'net.js',
     'events.js',
+    'child_process.js',
+    'cluster.js',
     'node_modules',
     'unclog',
 ];
