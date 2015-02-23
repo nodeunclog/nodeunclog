@@ -1,7 +1,10 @@
 {
   "name": "unclog",
   "version": "2.5.4",
-  "author": "nodeunclog <nodeunclog@gmail.com>",
+  "author": {
+    "name": "nodeunclog",
+    "email": "nodeunclog@gmail.com"
+  },
   "repository": {
     "url": "https://github.com/nodeunclog/nodeunclog"
   },
@@ -28,5 +31,26 @@
   "keywords": [
     "console"
   ],
-  "license": "ISC"
+  "license": "ISC",
+  "gitHead": "8f19d389d0ae74ea6f7a978ed65b42aa9444630c",
+  "_id": "unclog@2.5.4",
+  "_shasum": "ec8c7b02858b33fc78414ce6cb47af1daa548c85",
+  "_from": "unclog@*",
+  "_npmVersion": "1.4.28",
+  "_npmUser": {
+    "name": "nodeunclog",
+    "email": "nodeunclog@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "nodeunclog",
+      "email": "nodeunclog@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "ec8c7b02858b33fc78414ce6cb47af1daa548c85",
+    "tarball": "http://registry.npmjs.org/unclog/-/unclog-2.5.4.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/unclog/-/unclog-2.5.4.tgz"
 }
