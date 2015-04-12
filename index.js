@@ -104,7 +104,7 @@ function Prelog(msg) {
     var bullet = options.bullet;
     try {
         var string = expandConsoleArguments(arguments, consoleLevelNumber(consoleLevel));
-        if(!stdout){
+        if (!stdout) {
             var context = getContext.apply(null, arguments);
             var availableWidthForExtras = getAvailableWidthForExtras(string, config.width);
             var stringPadding = getStringPadding(string, config.contentWidth);
@@ -233,8 +233,16 @@ function getBaseFilename(file) {
 }
 
 function getBaseFolderAndFilename(file, additionalInfo) {
+    var text = '';
     // additionalInfo = stacktrace[j].lineNumber
-    return '[' + path.dirname(file).split(path.sep).reverse()[0] + path.sep + getBaseFilename(file) + (additionalInfo ? (':' + (config.backtrace ? '~' : '') + additionalInfo) : '') + ']';
+    var dirname = path.dirname(file).split(path.sep).reverse()[0];
+    var filename = getBaseFilename(file);
+
+    text += dirname;
+    if (!(filename == 'index' || filename == dirname))
+        text += path.sep + filename;
+
+    return '[' + text + (additionalInfo ? (':' + (config.backtrace ? '~' : '') + additionalInfo) : '') + ']';
 }
 
 function getStackTrail(stacktrace, cutoff) {
@@ -463,5 +471,5 @@ process.on('uncaughtException', function(err) {
     Unclog.err(err);
     Unclog.err(err.stack);
     Unclog.err('Uncaught Exception. Exiting...\u0007\u0007');
-    process.exit(1);
+    setTimeout(process.exit, 1000, 1);
 });

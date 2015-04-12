@@ -29,7 +29,7 @@ function width() {
     var width = (maxContentWidth / separationFractionOfContentAndExtras);
     if (process.stdout.columns && process.stdout.columns <= (maxContentWidth / separationFractionOfContentAndExtras))
         width = process.stdout.columns;
-    return width - 5;
+    return width - 10;
 }
 config.width = width();
 if (!isNaN(parseInt(process.env.unclogWidth)))
@@ -42,10 +42,12 @@ config.ignore = [
     'mongodb',
     'connect-mongo',
     'fs.js',
+    'url.js',
     'authenticator',
     'express',
     'domain.js',
     '_stream_readable.js',
+    '_http_client.js',
     '<anonymous>',
     'timers.js',
     '_stream_writable.js',
