@@ -50,7 +50,12 @@ var Socket = require('./socket');
 
 for (var j = 0; j < consoleLevels.length; j++) {
     Unclog[consoleLevels[j]] = PrePrelog(consoleLevels[j]);
-    Unclog[consoleLevels[j]].stdout = PrePrelog(consoleLevels[j], true);
+    Unclog[consoleLevels[j]].stdout = PrePrelog(consoleLevels[j], {
+        stdout: true
+    });
+    Unclog[consoleLevels[j]].noextras = Unclog[consoleLevels[j]].plain = PrePrelog(consoleLevels[j], {
+        extras: false
+    });
 }
 // console.debug(Unclog.log.stdout.toString());
 Unclog.error = Unclog.err;
@@ -72,10 +77,10 @@ function Unclog(customContext) {
     return Unclog.bind(this);
 };
 
-function PrePrelog(consoleLevel, stdout) {
-    var options = {};
+function PrePrelog(consoleLevel, options) {
+    options = options || {};
+    // options.stdout = stdout;
     options.consoleLevel = consoleLevel;
-    options.stdout = stdout;
     var level = options.level = consoleLevel;
     var number = options.number = consoleLevelNumber(level);
     var basicLevel = options.basicLevel = consoleLevelMapToBasicLevel(number);
@@ -94,6 +99,7 @@ function Prelog(msg) {
     var options = this;
     var consoleLevel = options.consoleLevel;
     var stdout = options.stdout;
+    var extras = options.extras;
     var level = options.level;
     var number = options.number;
     var basicLevel = options.basicLevel;
@@ -111,16 +117,20 @@ function Prelog(msg) {
             var baseFilename = context.baseFilename;
             var stackTrail = context.stackTrail;
             // var extras = levelText + ' ' + baseFilename + ' ' + stackTrail;
-            var extras = stackTrail;
-            extras = truncateExtras(extras, availableWidthForExtras, 1);
-            extras += ' [' + new Date().toISOString() + ']';
-            var extrasPadding = getExtrasPadding(extras, availableWidthForExtras);
-            extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
+            if (typeof extras == 'undefined') {
+                extras = stackTrail;
+                extras = truncateExtras(extras, availableWidthForExtras, 1);
+                extras += ' [' + new Date().toISOString() + ']';
+                var extrasPadding = getExtrasPadding(extras, availableWidthForExtras);
+                extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
+            }
         }
         try {
             // console[basicLevel].call(console, color + bullet[0], string, stringPadding + color, extras);
             if (stdout)
                 process.stdout.write.call(process.stdout, color + string + resetColor);
+            else if (!extras)
+                console[basicLevel].call(console, color + string + resetColor);
             else
                 console[basicLevel].call(console, color + bullet[0], string, extras, resetColor);
         } catch (err) {
