@@ -27,8 +27,11 @@ var separationFractionOfContentAndExtras = 2 / 3;
 
 function width() {
     var width = (maxContentWidth / separationFractionOfContentAndExtras);
-    if (process.stdout.columns && process.stdout.columns <= (maxContentWidth / separationFractionOfContentAndExtras))
-        width = process.stdout.columns;
+    try{
+        // console.debug('process.stdout.columns:', process.stdout.columns);
+        if (process.stdout.columns <= width)
+            width = process.stdout.columns;
+    }catch(err){}
     return width - 10;
 }
 config.width = width();
