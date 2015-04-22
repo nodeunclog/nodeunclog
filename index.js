@@ -13,6 +13,8 @@ console.debug = console.log;
 
 module.exports = Unclog;
 
+// var Color = require('chalk');
+var Color = require('cli-color');
 
 var util = require('util');
 var config = require('./config');
@@ -86,6 +88,7 @@ function PrePrelog(consoleLevel, options) {
     var basicLevel = options.basicLevel = consoleLevelMapToBasicLevel(number);
     var levelText = options.levelText = consoleLevelPaddedText(number);
     var color = options.color = consoleLevelColor(number)[0];
+    var color2 = options.color2 = consoleLevelColor(number)[2];
     var baseColor = options.baseColor = consoleLevelColor(1)[0];
     var resetColor = options.resetColor = consoleLevelColor('reset');
     var bullet = options.bullet = consoleLevelBullet(number);
@@ -105,6 +108,7 @@ function Prelog(msg) {
     var basicLevel = options.basicLevel;
     var levelText = options.levelText;
     var color = options.color;
+    var color2 = options.color2;
     var baseColor = options.baseColor;
     var resetColor = options.resetColor;
     var bullet = options.bullet;
@@ -122,17 +126,21 @@ function Prelog(msg) {
                 extras = truncateExtras(extras, availableWidthForExtras, 1);
                 extras += ' [' + new Date().toISOString() + ']';
                 var extrasPadding = getExtrasPadding(extras, availableWidthForExtras);
-                extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
+                // extras = baseColor + extrasPadding + color + bullet[2] + ' ' + baseColor + extras;
+                extras = Color.white(extrasPadding) + Color[color2](bullet[2]) + ' ' + Color.white(extras);
             }
         }
         try {
             // console[basicLevel].call(console, color + bullet[0], string, stringPadding + color, extras);
             if (stdout)
-                process.stdout.write.call(process.stdout, color + string + resetColor);
+                // process.stdout.write.call(process.stdout, color + string + resetColor);
+                process.stdout.write.call(process.stdout, Color[color2](string));
             else if (!extras)
-                console[basicLevel].call(console, color + string + resetColor);
+                // console[basicLevel].call(console, color + string + resetColor);
+                console[basicLevel].call(console, Color[color2](string));
             else
-                console[basicLevel].call(console, color + bullet[0], string, extras, resetColor);
+                // console[basicLevel].call(console, color + bullet[0], string, extras, resetColor);
+                console[basicLevel].call(console, Color[color2](bullet[0], string), extras);
         } catch (err) {
             console.error.apply(console, arguments);
         }
@@ -322,17 +330,29 @@ function consoleLevelBullet(consoleLevelNumber) {
 
 function consoleLevelColor(consoleLevelNumber) {
     var colors = [
-        ['\x1b[36;1m',  '\x1b[47;1;36;1m'], // silly
-        ['\x1b[30;1m',  '\x1b[47;1;30;1m'], // verbose
-        ['\x1b[30;22m', '\x1b[47;1;30;1m'], // log
-        ['\x1b[34;22m', '\x1b[47;1;34;1m'], // info
-        ['\x1b[33;22m', '\x1b[47;1;33;1m'], // pass
-        ['\x1b[32;22m', '\x1b[47;1;32;1m'], // start
-        ['\x1b[32;1m',  '\x1b[47;1;32;1m'], // end
-        ['\x1b[31;1m',  '\x1b[47;1;31;1m'], // warn
-        ['\x1b[31;1m',  '\x1b[47;1;31;1m'], // err
-        ['\x1b[35;22m', '\x1b[47;1;35;1m'], // fail
-        ['\x1b[34;1m',  '\x1b[47;1;34;1m'], // debug
+        // ['\x1b[36;1m',  '\x1b[47;1;36;1m', 'yellow'], // silly
+        // ['\x1b[30;1m',  '\x1b[47;1;30;1m', 'dim'], // verbose
+        // ['\x1b[30;22m', '\x1b[47;1;30;1m', 'italic'], // log
+        // ['\x1b[34;22m', '\x1b[47;1;34;1m', 'blue'], // info
+        // ['\x1b[33;22m', '\x1b[47;1;33;1m', 'green'], // pass
+        // ['\x1b[32;22m', '\x1b[47;1;32;1m', 'green'], // start
+        // ['\x1b[32;1m',  '\x1b[47;1;32;1m', 'red'], // end
+        // ['\x1b[31;1m',  '\x1b[47;1;31;1m', 'red'], // warn
+        // ['\x1b[31;1m',  '\x1b[47;1;31;1m', 'red'], // err
+        // ['\x1b[35;22m', '\x1b[47;1;35;1m', 'red'], // fail
+        // ['\x1b[34;1m',  '\x1b[47;1;34;1m', 'magenta'], // debug
+
+        ['\x1b[36;1m',  '\x1b[47;1;36;1m', 'yellowBright'], // silly
+        ['\x1b[30;1m',  '\x1b[47;1;30;1m', 'white'], // verbose
+        ['\x1b[30;22m', '\x1b[47;1;30;1m', 'italic'], // log
+        ['\x1b[34;22m', '\x1b[47;1;34;1m', 'magentaBright'], // info
+        ['\x1b[33;22m', '\x1b[47;1;33;1m', 'greenBright'], // pass
+        ['\x1b[32;22m', '\x1b[47;1;32;1m', 'greenBright'], // start
+        ['\x1b[32;1m',  '\x1b[47;1;32;1m', 'redBright'], // end
+        ['\x1b[31;1m',  '\x1b[47;1;31;1m', 'redBright'], // warn
+        ['\x1b[31;1m',  '\x1b[47;1;31;1m', 'redBright'], // err
+        ['\x1b[35;22m', '\x1b[47;1;35;1m', 'redBright'], // fail
+        ['\x1b[34;1m',  '\x1b[47;1;34;1m', 'magentaBright'], // debug
     ];
     colors.reset = '\x1b[30;22m';
     // colors.reset = '\x1b[30;2m';

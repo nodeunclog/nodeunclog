@@ -9,15 +9,15 @@
     "url": "https://github.com/nodeunclog/nodeunclog"
   },
   "dependencies": {
-    "colors": "^1.0.3",
-    "deep-index-of": "<0.2",
-    "long-stack-traces": "latest",
-    "on-finished": "latest",
-    "socket.io-events": "latest",
-    "stack-trace": "latest",
-    "to-short-string": "<0.2",
-    "ua-parser": "latest",
-    "utils-merge": "latest"
+    "cli-color": "^1.0.0",
+    "on-finished": "^2.2.0",
+    "socket.io-events": "^0.4.6",
+    "stack-trace": "^0.0.9",
+    "ua-parser": "^0.3.5",
+    "utils-merge": "^1.0.0",
+    "to-short-string": "latest",
+    "deep-index-of": "latest",
+    "long-stack-traces": "latest"
   },
   "description": "unclog your console log",
   "bugs": {

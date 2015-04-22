@@ -1,5 +1,9 @@
 var config = {};
 
+config.levels = {};
+config.levels.log = {}
+config.levels.debug = {}
+
 // color
 function color() {
     if (process.env.color)
