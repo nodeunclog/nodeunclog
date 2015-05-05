@@ -18,6 +18,6 @@ function CreateLevels() {
         for (var i = length; i <= longest; i++)
             level.padding += ' ';
     })(self.levels[level], level.length);
-    console.log('create padding');
+    // console.log('create padding');
 }
 module.exports = CreateLevels;

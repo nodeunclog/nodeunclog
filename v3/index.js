@@ -4,6 +4,8 @@ var defaultConsole = console;
 var UnclogConsole = require('./console');
 
 
+module.exports = Unclog;
+
 function Unclog(options) {
 
     // if (arguments.length >= 3)
@@ -14,7 +16,7 @@ function Unclog(options) {
     //     if (arguments[0].nsp)
     //         return require('./socket').apply(this, arguments);
 
-    if(!(this instanceof Unclog))
+    if (!(this instanceof Unclog))
         return new Unclog(options);
     merge(this, defaults, options);
     this.createLevels();
@@ -31,6 +33,8 @@ Unclog.createLevels();
 
 
 
+
+
 var UnclogGlobal =
     Unclog.prototype.global = Unclog.global =
     Unclog.prototype.globalize = Unclog.globalize =
@@ -39,13 +43,10 @@ var UnclogGlobal =
         options = options || {};
         var unclog = new Unclog(options);
         Object.defineProperty(global, 'console', {
-            get: function(){
+            get: function() {
                 return unclog;
             },
             enumerable: true,
             configurable: true
         });
     };
-
-
-module.exports = Unclog;

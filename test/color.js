@@ -36,47 +36,47 @@ console.debug.plain('>>Hello debug!');
 // // console.debug('hi debug');
 
 
-// var colors = require('colors');
-// console.log('hello blue'.blue); // outputs green text
-// console.log('hello green'.green); // outputs green text
-// // console.log('i like cake and pies'.underline.red) // outputs red underlined text
-// // console.log('inverse the color'.inverse); // inverses the color
-// // console.log('OMG Rainbows!'.rainbow); // rainbow
-// // console.log('Run the trap'.trap); // Drops the bass
+var colors = require('colors');
+console.log('hello blue'.blue); // outputs green text
+console.log('hello green'.green); // outputs green text
+console.log('i like cake and pies'.underline.red) // outputs red underlined text
+console.log('inverse the color'.inverse); // inverses the color
+console.log('OMG Rainbows!'.rainbow); // rainbow
+console.log('Run the trap'.trap); // Drops the bass
 
-// // console.log('reset'.reset); // Drops the bass
+console.log('reset'.reset); // Drops the bass
 
-// // console.log('hello'.green); // outputs green text
-// // console.log('i like cake and pies'.underline.red) // outputs red underlined text
-// // console.log('inverse the color'.inverse); // inverses the color
-// // console.log('OMG Rainbows!'.rainbow); // rainbow
-// // console.log('Run the trap'.trap); // Drops the bass
+console.log('hello'.green); // outputs green text
+console.log('i like cake and pies'.underline.red) // outputs red underlined text
+console.log('inverse the color'.inverse); // inverses the color
+console.log('OMG Rainbows!'.rainbow); // rainbow
+console.log('Run the trap'.trap); // Drops the bass
 
 
 
-// var clc = require('cli-color');
+var clc = require('cli-color');
 
 // process.stdout.write(clc.erase.screen);
 
-// var msg;
+var msg;
 
-// console.log(clc.white('Text in white'));
-// console.log(clc.whiteBright('Text in whiteBright'));
-// console.log(clc.black('Text in black'));
-// console.log(clc.blue('Text in blue'));
-// console.log(clc.green('Text in green'));
-// // console.log(clc.red.bgWhite.underline('Underlined red text on white background.'));
+console.log(clc.white('Text in white'));
+console.log(clc.whiteBright('Text in whiteBright'));
+console.log(clc.black('Text in black'));
+console.log(clc.blue('Text in blue'));
+console.log(clc.green('Text in green'));
+console.log(clc.red.bgWhite.underline('Underlined red text on white background.'));
+console.log(clc.red('red') + ' plain ' + clc.blue('blue'));
+console.log(clc.red('red ' + clc.blue('blue') + ' red'));
+// msg = clc.xterm(202).bgXterm(236);
+// console.log(msg('Orange text on dark gray background'));
+// // process.stdout.write(clc.reset);
+// console.log(clc.red('Text in red'));
+// console.log(clc.red.bgWhite.underline('Underlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white background.'));
 // console.log(clc.red('red') + ' plain ' + clc.blue('blue'));
 // console.log(clc.red('red ' + clc.blue('blue') + ' red'));
-// // msg = clc.xterm(202).bgXterm(236);
-// // console.log(msg('Orange text on dark gray background'));
-// // // process.stdout.write(clc.reset);
-// // console.log(clc.red('Text in red'));
-// // console.log(clc.red.bgWhite.underline('Underlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white backgroundUnderlined red text on white background.'));
-// // console.log(clc.red('red') + ' plain ' + clc.blue('blue'));
-// // console.log(clc.red('red ' + clc.blue('blue') + ' red'));
-// // msg = clc.xterm(202).bgXterm(236);
-// // console.log(msg('Orange text on dark gray background'));
+// msg = clc.xterm(202).bgXterm(236);
+// console.log(msg('Orange text on dark gray background'));
 
 // // var text = '.........\n' +
 // //     '. Hello .\n' +

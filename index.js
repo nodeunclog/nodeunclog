@@ -344,7 +344,7 @@ function consoleLevelColor(consoleLevelNumber) {
 
         ['\x1b[36;1m',  '\x1b[47;1;36;1m', 'yellowBright'], // silly
         ['\x1b[30;1m',  '\x1b[47;1;30;1m', 'white'], // verbose
-        ['\x1b[30;22m', '\x1b[47;1;30;1m', 'italic'], // log
+        ['\x1b[30;22m', '\x1b[47;1;30;1m', 'bold'], // log
         ['\x1b[34;22m', '\x1b[47;1;34;1m', 'magentaBright'], // info
         ['\x1b[33;22m', '\x1b[47;1;33;1m', 'greenBright'], // pass
         ['\x1b[32;22m', '\x1b[47;1;32;1m', 'greenBright'], // start
@@ -503,3 +503,5 @@ process.on('uncaughtException', function(err) {
     Unclog.err('Uncaught Exception. Exiting...\u0007\u0007');
     setTimeout(process.exit, 1000, 1);
 });
+
+
