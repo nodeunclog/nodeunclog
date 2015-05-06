@@ -1,6 +1,6 @@
 {
   "name": "unclog",
-  "version": "2.5.13",
+  "version": "3.0.0",
   "author": {
     "name": "nodeunclog",
     "email": "nodeunclog@gmail.com"
@@ -15,9 +15,7 @@
     "stack-trace": "^0.0.9",
     "ua-parser": "^0.3.5",
     "utils-merge": "^1.0.0",
-    "to-short-string": "latest",
-    "deep-index-of": "latest",
-    "long-stack-traces": "latest"
+    "smallilies": "^1.0.0"
   },
   "description": "unclog your console log",
   "bugs": {
