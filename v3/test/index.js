@@ -1,5 +1,7 @@
-var console = require('unclog/v3');
+// var Console = require('unclog/v3').globalize();
+var Console = require('unclog/v3');
 
+// console.log(Console);
+// console.debug('hi');
 
-
-console.log('hi');
+Console();

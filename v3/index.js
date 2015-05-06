@@ -1,52 +1,30 @@
-var merge = require('./merge');
-var defaults = require('./defaults');
-var defaultConsole = console;
-var UnclogConsole = require('./console');
-
-
 module.exports = Unclog;
 
 function Unclog(options) {
-
-    // if (arguments.length >= 3)
-    //     if (arguments[arguments.length - 2].req)
-    //         if (arguments[arguments.length - 3].res)
-    //             return require('./request').apply(this, arguments);
-    // if (arguments.length == 2)
-    //     if (arguments[0].nsp)
-    //         return require('./socket').apply(this, arguments);
-
     if (!(this instanceof Unclog))
         return new Unclog(options);
-    merge(this, defaults, options);
-    this.createLevels();
-    // merge(Unclog, this);
-    // return Unclog;
+    init(options);
 };
 
-merge(Unclog.prototype, defaultConsole, UnclogConsole);
-merge(Unclog, defaultConsole, UnclogConsole);
-Unclog.prototype.defaultConsole = Unclog.defaultConsole = defaultConsole;
+init.bind(Unclog)(require('./defaults'));
 
-merge(Unclog, defaults);
-Unclog.createLevels();
-
-
-
-
+function init(options) {
+    var UnclogConsole = require('./UnclogConsole')(options);
+    for (key in UnclogConsole)
+        this[key] = (this.prototype || this)[key] = UnclogConsole[key];
+}
 
 var UnclogGlobal =
     Unclog.prototype.global = Unclog.global =
     Unclog.prototype.globalize = Unclog.globalize =
     Unclog.prototype.replace = Unclog.replace =
     function UnclogGlobal(options) {
-        options = options || {};
-        var unclog = new Unclog(options);
+        var Console = new Unclog(options);
         Object.defineProperty(global, 'console', {
             get: function() {
-                return unclog;
+                return Console;
             },
-            enumerable: true,
-            configurable: true
+            configurable: true,
         });
+        return Console;
     };

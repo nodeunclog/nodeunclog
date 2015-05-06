@@ -1,9 +1,6 @@
 var config = {};
 
 config.levels = {};
-config.levels.log = {}
-config.levels.debug = {}
-
 
 config.levels.silly = {};
 config.levels.verbose = {};
@@ -29,19 +26,17 @@ config.levels.err.    bullet = '█';
 config.levels.fail.   bullet = '×';
 config.levels.debug.  bullet = '●';
 
-config.levels.silly.  color = '\x1b[36;1m';
-config.levels.verbose.color = '\x1b[30;1m';
-config.levels.log.    color = '\x1b[30;22m';
-config.levels.info.   color = '\x1b[34;22m';
-config.levels.pass.   color = '\x1b[33;22m';
-config.levels.start.  color = '\x1b[32;22m';
-config.levels.end.    color = '\x1b[32;1m';
-config.levels.warn.   color = '\x1b[31;1m';
-config.levels.err.    color = '\x1b[31;1m';
-config.levels.fail.   color = '\x1b[35;22m';
-config.levels.debug.  color = '\x1b[34;1m';
-config.colorReset =           '\x1b[30;22m';
-config.colorDim =  config.levels.verbose.color;
+config.levels.silly.  color = 'rainbow';
+config.levels.verbose.color = 'blackBright';
+config.levels.log.    color = 'black';
+config.levels.info.   color = 'magentaBright';
+config.levels.pass.   color = 'greenBright';
+config.levels.start.  color = 'magentaBright';
+config.levels.end.    color = 'red';
+config.levels.warn.   color = 'yellow';
+config.levels.err.    color = 'redBright';
+config.levels.fail.   color = 'redBright';
+config.levels.debug.  color = 'yellowBright';
 
 
 
