@@ -1,55 +1,14 @@
 {
-  "name": "unclog",
-  "version": "3.0.7",
-  "author": {
-    "name": "nodeunclog",
-    "email": "nodeunclog@gmail.com"
-  },
-  "repository": {
-    "url": "https://github.com/nodeunclog/nodeunclog"
-  },
-  "dependencies": {
-    "cli-color": "^1.0.0",
-    "on-finished": "^2.2.0",
-    "socket.io-events": "^0.4.6",
-    "stack-trace": "^0.0.9",
-    "ua-parser": "^0.3.5",
-    "utils-merge": "^1.0.0",
-    "moment": "^2.10.2",
-    "smallilies": "^1.0.0"
-  },
-  "description": "unclog your console log",
-  "bugs": {
-    "url": "https://github.com/nodeunclog/nodeunclog/issues"
-  },
-  "homepage": "https://github.com/nodeunclog/nodeunclog",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha test.js"
-  },
-  "keywords": [
-    "console"
-  ],
-  "license": "ISC",
-  "gitHead": "8f19d389d0ae74ea6f7a978ed65b42aa9444630c",
-  "_id": "unclog@2.5.4",
-  "_shasum": "ec8c7b02858b33fc78414ce6cb47af1daa548c85",
-  "_from": "unclog@^2",
-  "_npmVersion": "1.4.28",
-  "_npmUser": {
-    "name": "nodeunclog",
-    "email": "nodeunclog@gmail.com"
-  },
-  "maintainers": [
-    {
-      "name": "nodeunclog",
-      "email": "nodeunclog@gmail.com"
-    }
-  ],
-  "dist": {
-    "shasum": "ec8c7b02858b33fc78414ce6cb47af1daa548c85",
-    "tarball": "http://registry.npmjs.org/unclog/-/unclog-2.5.4.tgz"
-  },
-  "directories": {},
-  "_resolved": "https://registry.npmjs.org/unclog/-/unclog-2.5.4.tgz"
+"name"             : "unclog",
+"version"          : "3.1.0",
+"dependencies"     : {
+"cli-color"        : "^1.0",
+"on-finished"      : "^2.2",
+"socket.io-events" : "^0.4",
+"stack-trace"      : "^0.0",
+"ua-parser"        : "^0.3",
+"utils-merge"      : "^1.0",
+"moment"           : "^2.10",
+"smallilies"       : "^1.2"
+}
 }
