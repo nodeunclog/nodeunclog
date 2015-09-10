@@ -1,6 +1,6 @@
 {
 "name"             : "unclog",
-"version"          : "3.2.1",
+"version"          : "3.3.0-a",
 "dependencies"     : {
 "cli-color"        : "^1.0",
 "on-finished"      : "^2.2",
