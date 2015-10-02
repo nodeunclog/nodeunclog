@@ -9,6 +9,6 @@
 "ua-parser"        : "^0.3",
 "utils-merge"      : "^1.0",
 "moment"           : "^2.10",
-"smallilies"       : "^1.2"
+"smallilies"       : "^1.3"
 }
 }
