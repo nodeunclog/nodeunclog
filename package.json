@@ -1,6 +1,6 @@
 {
 "name"             : "unclog",
-"version"          : "3.4.3",
+"version"          : "3.4.4",
 "dependencies"     : {
 "cli-color"        : "^1.0",
 "on-finished"      : "^2.2",
@@ -9,6 +9,6 @@
 "ua-parser"        : "^0.3",
 "utils-merge"      : "^1.0",
 "moment"           : "^2.10",
-"smallilies"       : "^1.4"
+"smallilies"       : "^1.4.1"
 }
 }
