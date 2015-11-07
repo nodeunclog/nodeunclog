@@ -1,5 +1,7 @@
 require('smallilies');
 
+global.Console = console;
+
 var getConsole = require('./get-console');
 
 function Unclog(options) {

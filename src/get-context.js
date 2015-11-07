@@ -1,9 +1,8 @@
-var Console = console;
 var stackTrace = require('stack-trace');
 Error.stackTraceLimit = 20;
 // Error.stackTraceLimit = Infinity;
 var config = require('./defaults');
-var deepIndexOf = require('smallilies').deepIndexOf;
+// var deepIndexOf = require('smallilies').deepIndexOf;
 
 var Path = require('path');
 
@@ -24,6 +23,13 @@ function getContext(err) {
         for (var j = 0; j < stacktrace.length; j++)
             if (stacktrace[j] && stacktrace[j].fileName && deepIndexOf(stacktrace[j].fileName, config.ignore) == -1)
                 return attachBaseFilenameToStacktrace(stacktrace, j);
+            // for (var j = 0; j < stacktrace.length; j++){
+            //     let fileName = stacktrace[j].fileName;
+            //     let ignore = deepIndexOf(stacktrace[j].fileName, config.ignore);
+            //     Console.log(ignore, fileName);
+            //     if (stacktrace[j] && stacktrace[j].fileName && deepIndexOf(stacktrace[j].fileName, config.ignore) == -1)
+            //         return attachBaseFilenameToStacktrace(stacktrace, j);
+            // }
         return attachBaseFilenameToStacktrace(stacktrace, 2);
     }
 }
@@ -60,15 +66,34 @@ function getBaseFolderAndFilename(file, additionalInfo) {
     return ' ← ' + text + (additionalInfo ? (':' + (config.backtrace ? '~' : '') + additionalInfo) : '') + '';
 }
 
+// Console.log('config.ignore:', config.ignore);
+// Console.log('deepIndexOf:', deepIndexOf);
 function getStackTrail(stacktrace, cutoff) {
     if (!stacktrace || !stacktrace.length) return '';
     var stackTrail = '';
+    // for (let j = 0; j < ((cutoff && cutoff < stacktrace.length) ? cutoff : stacktrace.length); j++) {
+    //     let err = stacktrace[j];
+    //     let ind = deepIndexOf(err.fileName, config.ignore);
+    //     let ign = !~ind;
+    //     // let ign2 = config.ignore.reduce((a, b) => err.fileName.match(a) || err.fileName.match(b));
+    //     // Console.log(ind, ign, err.fileName);
+    //     if (err && err.fileName && err.lineNumber) {
+    //         if (!~ind) {
+    //             stackTrail += getBaseFolderAndFilename(err.fileName, err.lineNumber);
+    //             // break;
+    //         }
+    //     }
+    // }
+    // for (var j = 0; j < ((cutoff && cutoff < stacktrace.length) ? cutoff : stacktrace.length); j++)
+    //     if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].lineNumber)
+    //         if (deepIndexOf(stacktrace[j].fileName, config.ignore) == -1) {
+    //             stackTrail += getBaseFolderAndFilename(stacktrace[j].fileName, stacktrace[j].lineNumber);
+    //             // break;
+    //         }
     for (var j = 0; j < ((cutoff && cutoff < stacktrace.length) ? cutoff : stacktrace.length); j++)
         if (stacktrace[j] && stacktrace[j].fileName && stacktrace[j].lineNumber)
-            if (deepIndexOf(stacktrace[j].fileName, config.ignore) == -1) {
+            if (deepIndexOf(stacktrace[j].fileName, config.ignore) == -1)
                 stackTrail += getBaseFolderAndFilename(stacktrace[j].fileName, stacktrace[j].lineNumber);
-                // break;
-            }
     return stackTrail;
 }
 

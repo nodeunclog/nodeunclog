@@ -86,7 +86,7 @@ config.extraWidth = config.width * (1 - separationFractionOfContentAndExtras);
 
 // ignore
 config.ignore = [
-    '.',
+    // '.',
     'babel',
     '_http_server',
     'vm.js',

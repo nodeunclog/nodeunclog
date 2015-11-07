@@ -1,9 +1,9 @@
 {
 "name"             : "unclog",
-"version"          : "5.0.0",
+"version"          : "5.0.1",
 "main"             : "lib",
 "dependencies"     : {
-"smallilies"       : "^3.0.0",
+"smallilies"       : "^3.0.1",
 "cli-color"        : "^1.0",
 "on-finished"      : "^2.2",
 "socket.io-events" : "^0.4",

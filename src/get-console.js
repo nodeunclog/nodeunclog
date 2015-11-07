@@ -1,4 +1,3 @@
-var Console = console;
 var defaults = require('./defaults'),
     config = defaults;
 var clc = require('cli-color');
