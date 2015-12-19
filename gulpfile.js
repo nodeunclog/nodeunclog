@@ -15,11 +15,7 @@ gulp.task('babel', done =>
     gulp.src('src/**/*.js')
     .pipe(changed({firstPass: true}))
     .pipe(sourcemaps.init())
-    .pipe(babel({
-        presets: ['es2015', 'stage-0'],
-        retainLines: 'true',
-    }))
-    .pipe(replace(/(\/\/ )?["']use strict['"];?([\n\r]+)?/g, ''))
+    .pipe(babel({presets: ['es2015', 'stage-0'], }))
     .pipe(sourcemaps.write('.', {sourceRoot: 'src'}))
     .pipe(gulp.dest('lib')));
 
